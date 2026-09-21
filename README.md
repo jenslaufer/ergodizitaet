@@ -1,47 +1,44 @@
-# Neun Bilder, zwei Tage, 1.000 Kronen
+# Nine Images, Two Days, 1,000 Kroner
 
-Ein spielbarer Nachbau eines Entscheidungsexperiments aus der Forschung.
-Du startest mit 1.000 Kronen, lernst in einer passiven Phase, was neun Bilder
-mit deinem Vermögen machen, und wählst danach zwischen Wetten, deren Ausgang
-verborgen bleibt. Am Ende steht deine eigene Auswertung.
+A playable rebuild of a decision experiment from the research literature. You start with
+1,000 kroner, learn in a passive phase what nine images do to your wealth, and then
+choose between gambles whose outcomes stay hidden. At the end you get your own estimate.
 
-**Spoiler-Warnung: der Rest dieser Datei verrät, worum es geht.** Wer die Seite
-selbst spielen will, spielt zuerst und liest danach.
+**Spoiler warning: the rest of this file gives away what it is about.** If you want to
+play the page yourself, play first and read afterwards.
 
 ## Live
 
-<https://jenslaufer.com/neun-bilder/>
+<https://jenslaufer.com/nine-images/>
 
-## Warum die Seite nichts verrät
+## Why the page gives nothing away
 
-Titel, Adresse und Einstieg nennen weder das Experiment noch die Theorie
-dahinter. Wer das Papier kennt, entscheidet sonst nach dem, was er gelesen hat,
-statt nach dem, was er im Spiel erlebt — und misst damit nichts mehr. Die
-Auflösung samt Quellenangabe erscheint erst in der Auswertung, nach dem
-zweiten Tag.
+The title, the address and the opening name neither the experiment nor the theory behind
+it. Someone who knows the paper decides by what they have read instead of what they
+experience in the game — and then the page measures nothing. The reveal, together with
+the citation, appears only in the results, after the second day.
 
-Das ist auch näher am Original: die 18 Teilnehmer erfuhren nie, dass sich die
-beiden Tage unterscheiden.
+This is also closer to the original: the 18 participants were never told that the two
+days differ.
 
-## Das Experiment
+## The experiment
 
-Grundlage ist das Kopenhagen-Experiment von 2017 am DRCMR: 18 Teilnehmer
-spielten an zwei Tagen um echtes Geld, einmal unter additiver und einmal unter
-multiplikativer Vermögensdynamik. Dieselbe Wette, anderes Verhalten.
+The basis is the Copenhagen experiment of 2017 at the DRCMR: 18 participants played for
+real money on two days, once under additive and once under multiplicative wealth
+dynamics. Same gamble, different behaviour.
 
 > Meder, Rabe, Morville, Madsen, Koudahl, Dolan, Siebner, Hulme:
-> „Ergodicity-breaking reveals time optimal decision making in humans",
+> "Ergodicity-breaking reveals time optimal decision making in humans",
 > PLOS Computational Biology 17(9), 2021.
 > <https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1009217>
 
-Die neun Wachstumsraten stehen nicht im Fließtext des Papiers, sondern in
-seinen Rohdaten. Wie sie gelesen wurden, steht in `protokoll.md`.
+The nine growth rates are not in the prose of the paper, only in its raw data. How they
+were read is documented in `protokoll.md`.
 
-## Aufbau
+## Build
 
-Eine einzige Datei, `index.html`. Vue 3 und Tailwind kommen über CDN, es gibt
-keinen Build-Schritt. Alle Simulationen laufen im Browser; nichts wird
-gesendet, nichts gespeichert.
+A single file, `index.html`. Vue 3 and Tailwind come from a CDN, there is no build step.
+All simulation runs in the browser; nothing is sent anywhere, nothing is stored.
 
-Lokal ansehen: `python3 -m http.server` im Repo-Verzeichnis, dann
+Run locally: `python3 -m http.server` in the repo directory, then
 <http://localhost:8000>.

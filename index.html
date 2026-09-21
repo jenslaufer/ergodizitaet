@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Neun Bilder, zwei Tage, 1.000 Kronen</title>
-<meta name="description" content="Ein Entscheidungsspiel: neun Bilder bewegen dein Vermögen, du wählst zwischen Wetten. Worum es dabei ging, steht am Ende.">
+<title>Nine Images, Two Days, 1,000 Kroner</title>
+<meta name="description" content="A decision game: nine images move your wealth, you choose between gambles. What it was about is revealed at the end.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231c1917'/%3E%3Cpath d='M4 22 L11 10 L18 26 L28 6' stroke='%23fafaf9' stroke-width='2.5' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
@@ -17,69 +17,67 @@
 <div id="app" class="mx-auto max-w-2xl px-5 py-10 sm:py-14">
 
   <header class="mb-10">
-    <p class="text-xs uppercase tracking-widest text-stone-500 mb-3">Entscheidungsspiel &middot; zwei Tage &middot; etwa 8 Minuten</p>
+    <p class="text-xs uppercase tracking-widest text-stone-500 mb-3">Decision game &middot; two days &middot; about 8 minutes</p>
     <h1 class="text-3xl sm:text-4xl font-semibold leading-tight mb-4">
-      Du hast 1.000 Kronen. Was machst du daraus?
+      You have 1,000 kroner. What will you do with them?
     </h1>
     <p class="text-stone-600 leading-relaxed">
-      Zwei Tage, beide mit derselben Anleitung. Erst schaust du zu, wie neun Bilder dein
-      Vermögen bewegen. Dann wählst du wieder und wieder zwischen zwei Wetten, ohne zu
-      erfahren, wie sie ausgehen. Am Ende jedes Tages werden zehn deiner Wetten ausgelost
-      und abgerechnet.
+      Two days, both with the same instructions. First you watch nine images move your
+      wealth. Then you choose, again and again, between two gambles — without ever being
+      told how they turned out. At the end of each day, ten of your gambles are drawn at
+      random and settled.
     </p>
     <p class="text-stone-600 leading-relaxed mt-3">
-      Das ist der Ablauf eines echten Experiments aus der Forschung. <strong>Welches,
-      steht am Ende</strong> — vorher gelesen, würde es deine Entscheidungen färben.
+      This is the procedure of a real experiment from the research literature.
+      <strong>Which one is revealed at the end</strong> — read beforehand, it would
+      colour your decisions.
     </p>
   </header>
 
   <!-- ===================== INTRO ===================== -->
   <section v-if="phase === 'intro'" class="mb-12">
     <div class="rounded-lg border border-stone-300 bg-white p-5 mb-6">
-      <h2 class="font-semibold mb-3">Der Ablauf</h2>
+      <h2 class="font-semibold mb-3">How it works</h2>
       <ol class="list-decimal ml-5 space-y-2 text-sm text-stone-700 leading-relaxed">
-        <li><strong>Startvermögen 1.000 DKK</strong> an jedem der beiden Tage.</li>
-        <li><strong>Passive Phase.</strong> Neun Bildreize, jeder mit einer festen Wirkung
-        auf das Vermögen. Jeder Reiz wird 37-mal gezeigt, 333 Durchgänge. Nichts zu
-        entscheiden — nur beobachten und lernen, welches Bild was tut.</li>
-        <li><strong>Aktive Phase.</strong> 312 Entscheidungen zwischen zwei Wetten. Jede
-        Wette besteht aus zwei der gelernten Bilder, jedes mit 50 % Wahrscheinlichkeit.
-        <strong>Die Ausgänge bleiben verborgen.</strong></li>
-        <li><strong>Am Tagesende werden 10 der gewählten Wetten zufällig ausgelost</strong>
-        und auf das Vermögen angewendet. Das ist die Auszahlung.</li>
-        <li>Am zweiten Tag dasselbe: gleiche Anleitung, neue Bilder.</li>
+        <li><strong>You start each day with 1,000 DKK.</strong></li>
+        <li><strong>Passive phase.</strong> Nine image stimuli, each with a fixed effect on
+        your wealth. Every image is shown 37 times, 333 trials in total. Nothing to decide
+        — just watch and learn what each image does.</li>
+        <li><strong>Active phase.</strong> 312 choices between two gambles. Each gamble is
+        made of two of the images you learned, each with 50 % probability.
+        <strong>The outcomes stay hidden.</strong></li>
+        <li><strong>At the end of the day, 10 of your chosen gambles are drawn at random</strong>
+        and applied to your wealth. That is the payout.</li>
+        <li>The second day is the same: same instructions, new images.</li>
       </ol>
     </div>
 
-
-
     <label class="flex items-center gap-2 text-sm text-stone-700 mb-4">
-      <span>Entscheidungen pro Tag:</span>
+      <span>Decisions per day:</span>
       <select v-model.number="nAktiv" class="rounded border border-stone-300 px-2 py-1">
-        <option :value="24">24 (kurz, ~4 Min)</option>
-        <option :value="48">48 (genauer, ~8 Min)</option>
-        <option :value="96">96 (nah am Original)</option>
+        <option :value="24">24 (short, ~4 min)</option>
+        <option :value="48">48 (sharper, ~8 min)</option>
+        <option :value="96">96 (close to the original)</option>
       </select>
     </label>
     <button @click="start" class="rounded-md bg-stone-900 px-5 py-2.5 text-sm text-white hover:bg-stone-700">
-      Tag 1 beginnen
+      Start day 1
     </button>
     <p class="text-xs text-stone-500 mt-3">
-      Das Original hatte 312 Entscheidungen pro Tag. Je weniger du spielst, desto
-      unschärfer fällt deine eigene Schätzung am Ende aus — die Seite sagt dir, wie
-      unscharf.
+      The original had 312 decisions per day. The less you play, the fuzzier your own
+      estimate at the end — the page will tell you how fuzzy.
     </p>
   </section>
 
   <!-- ===================== PASSIV ===================== -->
   <section v-if="phase === 'passiv'" class="mb-12">
     <p class="text-xs uppercase tracking-widest text-stone-500 mb-2">
-      Tag {{ tag + 1 }} &middot; Passive Phase &middot; {{ passivIndex }}/{{ passivSeq.length }}
+      Day {{ tag + 1 }} &middot; Passive phase &middot; {{ passivIndex }}/{{ passivSeq.length }}
     </p>
-    <h2 class="text-xl font-semibold mb-4">Schau zu, was die Bilder mit deinem Geld machen.</h2>
+    <h2 class="text-xl font-semibold mb-4">Watch what the images do to your money.</h2>
     <p class="text-stone-600 text-sm mb-6 leading-relaxed">
-      Nichts zu entscheiden. Merk dir, welches Bild dein Vermögen wie stark bewegt —
-      in der nächsten Phase wählst du zwischen ihnen, und dort siehst du keine Zahlen mehr.
+      Nothing to decide. Remember how strongly each image moves your wealth — in the next
+      phase you choose between them, and there you see no numbers at all.
     </p>
 
     <div class="rounded-lg border border-stone-300 bg-white p-6 mb-4 text-center">
@@ -95,27 +93,27 @@
 
     <div class="flex flex-wrap gap-3">
       <button @click="passivSchritt" class="rounded-md bg-stone-900 px-5 py-2.5 text-sm text-white hover:bg-stone-700">
-        Nächster Reiz
+        Next image
       </button>
       <button @click="passivDurchlaufen" class="rounded-md border border-stone-300 bg-white px-4 py-2.5 text-sm hover:border-stone-500">
-        Rest im Schnelldurchlauf
+        Run through the rest
       </button>
     </div>
     <p class="text-xs text-stone-500 mt-3">
-      Im Original musste hier binnen einer Sekunde eine Taste gedrückt werden, damit der
-      Scanner einen sauberen Zeitpunkt hat. Hier drängt nichts.
+      In the original a key had to be pressed within one second, so the scanner had a clean
+      time stamp. Here nothing is rushing you.
     </p>
   </section>
 
   <!-- ===================== AKTIV ===================== -->
   <section v-if="phase === 'aktiv'" class="mb-12">
     <p class="text-xs uppercase tracking-widest text-stone-500 mb-2">
-      Tag {{ tag + 1 }} &middot; Aktive Phase &middot; {{ aktivIndex + 1 }}/{{ aktivTrials.length }}
+      Day {{ tag + 1 }} &middot; Active phase &middot; {{ aktivIndex + 1 }}/{{ aktivTrials.length }}
     </p>
-    <h2 class="text-xl font-semibold mb-2">Welche Wette nimmst du?</h2>
+    <h2 class="text-xl font-semibold mb-2">Which gamble do you take?</h2>
     <p class="text-stone-600 text-sm mb-6">
-      Jede Wette: eins der beiden Bilder trifft ein, je 50 %. Was herauskam, erfährst du
-      nicht. Dein Vermögen steht bei
+      Each gamble: one of its two images happens, 50 % each. You will not learn which one.
+      Your wealth stands at
       <span class="num font-medium">{{ komma(vermoegen, 2) }} kr</span>.
     </p>
 
@@ -126,7 +124,7 @@
           <div class="h-20 w-20" v-html="bildFuer(aktuellerTrial[seite][0])"></div>
           <div class="h-20 w-20" v-html="bildFuer(aktuellerTrial[seite][1])"></div>
         </div>
-        <div class="text-xs text-stone-500">Wette {{ seite === 'links' ? 1 : 2 }}</div>
+        <div class="text-xs text-stone-500">Gamble {{ seite === 'links' ? 1 : 2 }}</div>
       </button>
     </div>
 
@@ -137,58 +135,58 @@
 
   <!-- ===================== TAGESENDE ===================== -->
   <section v-if="phase === 'tagesende'" class="mb-12">
-    <p class="text-xs uppercase tracking-widest text-stone-500 mb-2">Tag {{ tag + 1 }} &middot; Auslosung</p>
-    <h2 class="text-xl font-semibold mb-4">Zehn deiner Wetten wurden ausgelost.</h2>
+    <p class="text-xs uppercase tracking-widest text-stone-500 mb-2">Day {{ tag + 1 }} &middot; The draw</p>
+    <h2 class="text-xl font-semibold mb-4">Ten of your gambles were drawn.</h2>
     <div class="rounded-lg border border-stone-300 bg-white p-5 mb-5">
       <p class="text-sm text-stone-600 mb-3">
-        Start 1.000 kr, nach der passiven Phase
+        Started at 1,000 kr, after the passive phase
         <span class="num">{{ komma(vermoegenNachPassiv, 2) }} kr</span>.
       </p>
       <div class="num text-3xl font-semibold mb-1">{{ komma(vermoegen, 2) }} kr</div>
       <p class="text-xs text-stone-500">
-        Auszahlung im Original auf 0–2.000 kr pro Tag begrenzt — hier ebenso:
+        The original capped the payout at 0–2,000 kr per day — same here:
         <span class="num">{{ komma(Math.min(2000, Math.max(0, vermoegen)), 2) }} kr</span>.
       </p>
     </div>
     <button @click="naechsterTag" class="rounded-md bg-stone-900 px-5 py-2.5 text-sm text-white hover:bg-stone-700">
-      {{ tag === 0 ? 'Tag 2 beginnen' : 'Auswertung' }}
+      {{ tag === 0 ? 'Start day 2' : 'See the results' }}
     </button>
   </section>
 
   <!-- ===================== AUSWERTUNG ===================== -->
   <section v-if="phase === 'auswertung'" class="mb-12">
     <div class="rounded-lg border-l-4 border-stone-900 bg-white p-5 mb-6">
-      <h2 class="font-semibold mb-2">Die Auflösung</h2>
+      <h2 class="font-semibold mb-2">The reveal</h2>
       <p class="text-sm text-stone-700 leading-relaxed mb-3">
-        Die beiden Tage waren nicht gleich. An einem Tag wurde dein Vermögen
-        <strong>addiert</strong>: jedes Bild stand für einen festen Betrag zwischen
-        <span class="num">&minus;428</span> und <span class="num">+428</span> kr. Am
-        anderen wurde es <strong>multipliziert</strong>: jedes Bild stand für einen
-        Faktor zwischen <span class="num">0,447</span> und <span class="num">2,239</span>.
+        The two days were not the same. On one day your wealth was <strong>added</strong>
+        to: each image stood for a fixed amount between <span class="num">&minus;428</span>
+        and <span class="num">+428</span> kr. On the other it was
+        <strong>multiplied</strong>: each image stood for a factor between
+        <span class="num">0.447</span> and <span class="num">2.239</span>.
       </p>
       <p class="text-sm text-stone-700 leading-relaxed mb-3">
-        Gesagt wurde dir das nicht, und das war kein Versehen. Im Original erfuhren die
-        Teilnehmer es ebenso wenig: gleiche Anleitung, gleicher Ablauf, gleicher Scanner,
-        und die Reihenfolge der beiden Tage war über die Gruppe ausbalanciert. Gemessen
-        wird, ob sich deine Risikoneigung mit der Dynamik verschiebt — ohne dass du
-        wusstest, dass es eine gibt.
+        You were not told, and that was not an oversight. The participants in the original
+        were not told either: same instructions, same procedure, same scanner, and the
+        order of the two days was balanced across the group. What is being measured is
+        whether your risk attitude shifts with the dynamic — without you knowing there
+        was one.
       </p>
       <p class="text-sm text-stone-700 leading-relaxed">
-        Gespielt hast du das <strong>Kopenhagen-Experiment</strong> von 2017 am DRCMR:
-        Meder, Rabe, Morville, Madsen, Koudahl, Dolan, Siebner, Hulme und Peters,
-        veröffentlicht 2021. 18 Menschen, zwei Tage im Kernspintomografen, echtes Geld.
-        Die Quellenangabe steht ganz unten.
+        What you played is the <strong>Copenhagen experiment</strong> of 2017 at the DRCMR:
+        Meder, Rabe, Morville, Madsen, Koudahl, Dolan, Siebner, Hulme and Peters, published
+        in 2021. 18 people, two days in an MRI scanner, real money. The full citation is at
+        the bottom of this page.
       </p>
     </div>
 
-    <h2 class="font-semibold mb-3">Die neun Reize</h2>
+    <h2 class="font-semibold mb-3">The nine stimuli</h2>
     <p class="text-sm text-stone-600 mb-4">
-      Additiv: Beträge von <span class="num">&minus;428</span> bis
-      <span class="num">+428</span> DKK, gleichmäßig auf einer linearen Skala.
-      Multiplikativ: Wachstumsfaktoren von <span class="num">0,447</span> (gut halbieren)
-      bis <span class="num">2,239</span> (gut verdoppeln), gleichmäßig auf einer
-      <em>logarithmischen</em> Skala. Beide Reihen aus den Rohdaten des Papiers
-      nachgerechnet, nicht geschätzt.
+      Additive: amounts from <span class="num">&minus;428</span> to
+      <span class="num">+428</span> DKK, evenly spaced on a linear scale.
+      Multiplicative: growth factors from <span class="num">0.447</span> (roughly halving)
+      to <span class="num">2.239</span> (roughly doubling), evenly spaced on a
+      <em>logarithmic</em> scale. Both series were recomputed from the paper's raw data,
+      not guessed from the prose.
     </p>
     <div class="grid grid-cols-3 gap-2 mb-8 text-xs">
       <div v-for="(f, i) in FAKTOREN" :key="i" class="rounded border border-stone-300 bg-white p-2 text-center">
@@ -197,116 +195,115 @@
       </div>
     </div>
 
-    <h2 class="text-xl font-semibold mb-4">Deine Risikoaversion</h2>
+    <h2 class="text-xl font-semibold mb-4">Your risk aversion</h2>
 
     <p class="text-stone-600 text-sm mb-5 leading-relaxed">
-      Aus deinen Entscheidungen wird dasselbe Modell geschätzt wie im Papier:
-      isoelastischer Nutzen mit einem Parameter <em>eta</em>.
-      <span class="num">eta = 0</span> heißt risikoneutral (linearer Nutzen),
-      <span class="num">eta = 1</span> heißt logarithmischer Nutzen.
-      Die Vorhersage der Ergodizitäts-Theorie: <strong>eta = 0 am additiven Tag,
-      eta = 1 am multiplikativen</strong> — denn das maximiert jeweils die Wachstumsrate
-      über die Zeit, nicht den Erwartungswert.
+      Your choices are fitted with the same model the paper uses: isoelastic utility with a
+      single parameter <em>eta</em>. <span class="num">eta = 0</span> means risk neutral
+      (linear utility), <span class="num">eta = 1</span> means logarithmic utility.
+      What ergodicity theory predicts: <strong>eta = 0 on the additive day, eta = 1 on the
+      multiplicative one</strong> — because that is what maximises the growth rate over
+      time, rather than the expected value.
     </p>
 
     <div class="grid grid-cols-2 gap-3 mb-6">
       <div class="rounded-lg border border-stone-300 bg-white p-4">
-        <div class="text-xs uppercase tracking-wide text-stone-500 mb-1">Additiv</div>
+        <div class="text-xs uppercase tracking-wide text-stone-500 mb-1">Additive</div>
         <div class="num text-2xl font-semibold">eta = {{ komma(etaAdd, 2) }}</div>
-        <div class="num text-xs text-stone-500">optimal 0 &middot; 18 Personen: 0,15</div>
+        <div class="num text-xs text-stone-500">optimal 0 &middot; 18 people: 0.15</div>
       </div>
       <div class="rounded-lg border border-stone-300 bg-white p-4">
-        <div class="text-xs uppercase tracking-wide text-stone-500 mb-1">Multiplikativ</div>
+        <div class="text-xs uppercase tracking-wide text-stone-500 mb-1">Multiplicative</div>
         <div class="num text-2xl font-semibold">eta = {{ komma(etaMult, 2) }}</div>
-        <div class="num text-xs text-stone-500">optimal 1 &middot; 18 Personen: 1,15</div>
+        <div class="num text-xs text-stone-500">optimal 1 &middot; 18 people: 1.15</div>
       </div>
     </div>
 
     <div class="rounded-lg border border-stone-300 bg-white p-4 mb-6">
       <canvas ref="etaCanvas" class="w-full" height="300"></canvas>
       <p class="text-xs text-stone-500 mt-3 leading-relaxed">
-        Waagerecht dein eta am additiven Tag, senkrecht am multiplikativen. Das Kreuz ist
-        der zeitoptimale Punkt (0&nbsp;|&nbsp;1). Die Diagonale ist, wo du lägest, wenn
-        die Dynamik dir egal wäre. Der graue Punkt ist der Gruppenwert der 18 Teilnehmer
-        (0,15&nbsp;|&nbsp;1,15).
+        Horizontally your eta on the additive day, vertically on the multiplicative one.
+        The cross is the time-optimal point (0&nbsp;|&nbsp;1). The diagonal is where you
+        would sit if the dynamic made no difference to you. The grey dot is the group value
+        of the 18 participants (0.15&nbsp;|&nbsp;1.15).
       </p>
     </div>
 
     <div class="rounded-lg border-l-4 border-stone-900 bg-white p-5 mb-6">
-      <p class="mb-2"><strong>Dein Verschiebungsmass: {{ komma(etaMult - etaAdd, 2) }}</strong></p>
+      <p class="mb-2"><strong>Your shift: {{ komma(etaMult - etaAdd, 2) }}</strong></p>
       <p class="text-sm text-stone-600 leading-relaxed">
-        Im Papier beträgt diese Verschiebung im Mittel <span class="num">1,00</span>
-        (SD 0,35, 95-%-Intervall 0,83–1,17) — praktisch genau der Wert, den die Theorie
-        vorhersagt. Nicht ein einziger der 18 Teilnehmer lag näher an der Diagonale als
-        am zeitoptimalen Punkt.
+        In the paper this shift averages <span class="num">1.00</span> (SD 0.35, 95 %
+        interval 0.83–1.17) — almost exactly the value the theory predicts. Not a single
+        one of the 18 participants sat closer to the diagonal than to the time-optimal
+        point.
       </p>
     </div>
 
     <div class="rounded-lg border border-stone-300 bg-white p-5 mb-6">
-      <h3 class="font-semibold mb-2 text-sm">Ohne jedes Modell</h3>
+      <h3 class="font-semibold mb-2 text-sm">Without any model at all</h3>
       <p class="text-sm text-stone-600 leading-relaxed mb-2">
-        Ein <em>diskrepanter</em> Durchgang ist einer, in dem ein Akteur mit linearem
-        Nutzen anders wählen würde als einer mit logarithmischem. Wie oft hast du dort
-        die logarithmische Wette genommen?
+        A trial is <em>discrepant</em> when an agent with linear utility would choose
+        differently from one with logarithmic utility. How often did you take the
+        logarithmic gamble there?
       </p>
       <p class="num">
-        additiv <strong>{{ prozent(quoteAdd) }}</strong> von {{ nDiskAdd }} &middot;
-        multiplikativ <strong>{{ prozent(quoteMult) }}</strong> von {{ nDiskMult }}
+        additive <strong>{{ prozent(quoteAdd) }}</strong> of {{ nDiskAdd }} &middot;
+        multiplicative <strong>{{ prozent(quoteMult) }}</strong> of {{ nDiskMult }}
       </p>
       <p class="text-xs text-stone-500 mt-2">
-        Das ist Abbildung 2 des Papiers. Dort: <span class="num">0,49</span> additiv,
-        <span class="num">0,72</span> multiplikativ — eine Verschiebung von
-        <span class="num">0,225</span> innerhalb derselben Person. 25 der 312 Durchgänge
-        waren diskrepant.
+        This is figure 2 of the paper. There: <span class="num">0.49</span> additive,
+        <span class="num">0.72</span> multiplicative — a shift of
+        <span class="num">0.225</span> within the same person. 25 of the 312 trials were
+        discrepant.
       </p>
     </div>
 
     <div class="rounded-lg border border-amber-300 bg-amber-50 p-5 mb-6">
-      <h3 class="font-semibold mb-2 text-sm">Was an diesem Nachbau nicht 1:1 ist</h3>
+      <h3 class="font-semibold mb-2 text-sm">Where this rebuild is not 1:1</h3>
       <ul class="list-disc ml-5 space-y-1 text-sm text-stone-700 leading-relaxed">
-        <li><strong>{{ nAktiv }} Entscheidungen statt 312</strong> pro Tag, und
-        {{ passivSeq.length }} statt 333 passive Durchgänge. Deshalb steht dein eta auf
-        dünnem Grund: <span class="num">&plusmn;{{ komma(etaFehler, 2) }}</span>
-        (Krümmung der Likelihood).</li>
-        <li><strong>Kein echtes Geld.</strong> Im Original ging es um bis zu 4.000 DKK
-        Auszahlung, zusätzlich zu 1.020 DKK Aufwandsentschädigung.</li>
-        <li><strong>Kein Kernspintomograf, keine zwei getrennten Tage.</strong> Die
-        Teilnehmer lagen je drei Stunden im Scanner, an zwei verschiedenen Terminen.</li>
-        <li><strong>Andere Bilder.</strong> Das Original nutzte 18 feste Fraktalbilder,
-        hier sind es erzeugte Muster.</li>
-        <li><strong>Maximum-Likelihood statt hierarchischer Bayes-Schätzung.</strong> Das
-        Papier schätzt eta und beta gemeinsam über alle Teilnehmer; hier wird dein eta
-        einzeln und ohne Prior geschätzt.</li>
-        <li>Die Wettpaare stammen aus demselben eingeschränkten Raum wie im Original
-        (beide Wetten gemischt, alle vier Bilder verschieden, dazu
-        {{ nNoBrainer }} No-Brainer-Durchgänge zur Kontrolle) — nur nicht alle 144.</li>
+        <li><strong>{{ nAktiv }} decisions instead of 312</strong> per day, and
+        {{ passivSeq.length }} passive trials instead of 333. That is why your eta stands on
+        thin ground: <span class="num">&plusmn;{{ komma(etaFehler, 2) }}</span>
+        (curvature of the likelihood).</li>
+        <li><strong>No real money.</strong> The original paid out up to 4,000 DKK, on top of
+        a 1,020 DKK participation fee.</li>
+        <li><strong>No MRI scanner, and not two separate days.</strong> Participants lay in
+        the scanner for three hours on each of two different dates.</li>
+        <li><strong>Different images.</strong> The original used 18 fixed fractal images,
+        here they are generated patterns.</li>
+        <li><strong>Maximum likelihood instead of hierarchical Bayesian estimation.</strong>
+        The paper estimates eta and beta jointly across all participants; here your eta is
+        estimated on its own, without a prior.</li>
+        <li>The gamble pairs come from the same restricted space as in the original (both
+        gambles mixed, all four images different, plus {{ nNoBrainer }} no-brainer trials as
+        a control) — just not all 144 of them.</li>
       </ul>
       <p class="text-sm text-stone-700 mt-3">
-        No-Brainer richtig: <span class="num font-medium">{{ nbRichtig }}/{{ nbGesamt }}</span>.
-        <span v-if="nbGesamt && nbRichtig / nbGesamt <= 0.5">Unter 50 % — im Original war das
-        der Ausschlussgrund für Teilnehmer 5.</span>
+        No-brainers correct: <span class="num font-medium">{{ nbRichtig }}/{{ nbGesamt }}</span>.
+        <span v-if="nbGesamt && nbRichtig / nbGesamt <= 0.5">Below 50 % — in the original
+        that was the reason participant 5 was excluded.</span>
       </p>
     </div>
 
     <button @click="nochmal" class="rounded-md bg-stone-900 px-5 py-2.5 text-sm text-white hover:bg-stone-700">
-      Noch einmal spielen
+      Play again
     </button>
   </section>
 
   <footer class="border-t border-stone-300 pt-6 text-sm text-stone-500 leading-relaxed">
     <template v-if="phase === 'auswertung'">
       <p class="mb-2">
-        Quelle: Meder D, Rabe F, Morville T, Madsen KH, Koudahl MT, Dolan RJ, Siebner HR,
+        Source: Meder D, Rabe F, Morville T, Madsen KH, Koudahl MT, Dolan RJ, Siebner HR,
         Hulme OJ (2021), <em>Ergodicity-breaking reveals time optimal decision making in
         humans</em>, PLoS Comput Biol 17(9): e1009217.
-        <a class="underline" href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1009217">Papier</a> &middot;
-        <a class="underline" href="https://github.com/ollie-hulme/ergodicity-breaking-choice-experiment">Daten und Code</a>.
+        <a class="underline" href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1009217">Paper</a> &middot;
+        <a class="underline" href="https://github.com/ollie-hulme/ergodicity-breaking-choice-experiment">Data and code</a>.
       </p>
-      <p>Die neun Wachstumsraten sind aus den Rohdaten des Repositoriums gelesen, nicht aus dem Fließtext geschätzt.</p>
+      <p>The nine growth rates were read from the raw data of that repository, not estimated from the prose of the paper.</p>
     </template>
     <p v-else>
-      Alles läuft im Browser. Nichts wird gesendet, nichts gespeichert. Welches Experiment
-      das ist und woher es stammt, steht hier, sobald du durch bist.
+      Everything runs in your browser. Nothing is sent anywhere, nothing is stored. Which
+      experiment this is, and where it comes from, appears here once you are through.
     </p>
   </footer>
 </div>
@@ -367,8 +364,8 @@ createApp({
     dynamik() { return this.reihenfolge[this.tag]; }
   },
   methods: {
-    komma(x, n) { return (x ?? 0).toLocaleString('de-DE', { minimumFractionDigits: n, maximumFractionDigits: n }); },
-    prozent(x) { return (100 * (x || 0)).toFixed(0) + ' %'; },
+    komma(x, n) { return (x ?? 0).toLocaleString('en-US', { minimumFractionDigits: n, maximumFractionDigits: n }); },
+    prozent(x) { return (100 * (x || 0)).toFixed(0) + '%'; },
     bildFuer(i) { return this.stimuli[i].bild; },
 
     start() {
@@ -574,8 +571,8 @@ createApp({
       // eigener Punkt
       g.fillStyle = '#1c1917'; g.beginPath(); g.arc(X(this.etaAdd), Y(this.etaMult), 7, 0, 7); g.fill();
       g.fillStyle = '#57534e'; g.font = '11px system-ui';
-      g.fillText('eta additiv', W / 2 - 24, H - 10);
-      g.save(); g.translate(11, H / 2 + 28); g.rotate(-Math.PI / 2); g.fillText('eta multiplikativ', 0, 0); g.restore();
+      g.fillText('eta additive', W / 2 - 26, H - 10);
+      g.save(); g.translate(11, H / 2 + 28); g.rotate(-Math.PI / 2); g.fillText('eta multiplicative', 0, 0); g.restore();
       g.fillText('0', X(0) - 3, H - pad + 14); g.fillText('1', X(1) - 3, H - pad + 14); g.fillText('2', X(2) - 3, H - pad + 14);
       g.fillText('0', pad - 14, Y(0) + 4); g.fillText('1', pad - 14, Y(1) + 4); g.fillText('2', pad - 14, Y(2) + 4);
     },
