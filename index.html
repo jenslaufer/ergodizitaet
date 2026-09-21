@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Das Kopenhagen-Experiment — nachgebaut</title>
-<meta name="description" content="Das Experiment von Meder, Hulme et al. (PLOS Comput Biol 2021) als spielbarer Nachbau: passive Lernphase, aktive Wettphase, eigene Risikoaversion eta.">
+<title>Neun Bilder, zwei Tage, 1.000 Kronen</title>
+<meta name="description" content="Ein Entscheidungsspiel: neun Bilder bewegen dein Vermögen, du wählst zwischen Wetten. Worum es dabei ging, steht am Ende.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231c1917'/%3E%3Cpath d='M4 22 L11 10 L18 26 L28 6' stroke='%23fafaf9' stroke-width='2.5' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
@@ -17,23 +17,26 @@
 <div id="app" class="mx-auto max-w-2xl px-5 py-10 sm:py-14">
 
   <header class="mb-10">
-    <p class="text-xs uppercase tracking-widest text-stone-500 mb-3">Kopenhagen 2017 &middot; DRCMR</p>
+    <p class="text-xs uppercase tracking-widest text-stone-500 mb-3">Entscheidungsspiel &middot; zwei Tage &middot; etwa 8 Minuten</p>
     <h1 class="text-3xl sm:text-4xl font-semibold leading-tight mb-4">
-      Das Kopenhagen-Experiment, nachgebaut.
+      Du hast 1.000 Kronen. Was machst du daraus?
     </h1>
     <p class="text-stone-600 leading-relaxed">
-      Meder, Rabe, Morville, Madsen, Koudahl, Dolan, Siebner, Hulme, Peters:
-      <em>Ergodicity-breaking reveals time optimal decision making in humans</em>,
-      PLOS Computational Biology 2021. 18 Menschen, zwei Tage, echtes Geld.
-      An einem Tag wurde ihr Vermögen addiert, am anderen multipliziert.
-      Die Frage: verschiebt sich die Risikoneigung mit der Dynamik?
+      Zwei Tage, beide mit derselben Anleitung. Erst schaust du zu, wie neun Bilder dein
+      Vermögen bewegen. Dann wählst du wieder und wieder zwischen zwei Wetten, ohne zu
+      erfahren, wie sie ausgehen. Am Ende jedes Tages werden zehn deiner Wetten ausgelost
+      und abgerechnet.
+    </p>
+    <p class="text-stone-600 leading-relaxed mt-3">
+      Das ist der Ablauf eines echten Experiments aus der Forschung. <strong>Welches,
+      steht am Ende</strong> — vorher gelesen, würde es deine Entscheidungen färben.
     </p>
   </header>
 
   <!-- ===================== INTRO ===================== -->
   <section v-if="phase === 'intro'" class="mb-12">
     <div class="rounded-lg border border-stone-300 bg-white p-5 mb-6">
-      <h2 class="font-semibold mb-3">Der Ablauf im Original</h2>
+      <h2 class="font-semibold mb-3">Der Ablauf</h2>
       <ol class="list-decimal ml-5 space-y-2 text-sm text-stone-700 leading-relaxed">
         <li><strong>Startvermögen 1.000 DKK</strong> an jedem der beiden Tage.</li>
         <li><strong>Passive Phase.</strong> Neun Bildreize, jeder mit einer festen Wirkung
@@ -44,34 +47,11 @@
         <strong>Die Ausgänge bleiben verborgen.</strong></li>
         <li><strong>Am Tagesende werden 10 der gewählten Wetten zufällig ausgelost</strong>
         und auf das Vermögen angewendet. Das ist die Auszahlung.</li>
-        <li>Am zweiten Tag dasselbe, andere Bilder, andere Dynamik.</li>
+        <li>Am zweiten Tag dasselbe: gleiche Anleitung, neue Bilder.</li>
       </ol>
     </div>
 
-    <div class="rounded-lg border-l-4 border-stone-900 bg-white p-5 mb-6">
-      <p class="text-sm text-stone-700 leading-relaxed">
-        <strong>Die Teilnehmer erfuhren nie, dass sich die Tage unterscheiden.</strong>
-        Gleiche Anleitung, gleicher Ablauf, gleicher Scanner. Nur die Mathematik hinter
-        den Bildern war eine andere — und die Reihenfolge der beiden Tage war über die
-        Gruppe ausbalanciert.
-      </p>
-    </div>
 
-    <h2 class="font-semibold mb-3">Die neun Reize</h2>
-    <p class="text-sm text-stone-600 mb-4">
-      Additiv: Beträge von <span class="num">&minus;428</span> bis
-      <span class="num">+428</span> DKK, gleichmäßig auf einer linearen Skala.
-      Multiplikativ: Wachstumsfaktoren von <span class="num">0,447</span> (gut halbieren)
-      bis <span class="num">2,239</span> (gut verdoppeln), gleichmäßig auf einer
-      <em>logarithmischen</em> Skala. Beide Reihen aus den Rohdaten des Papiers
-      nachgerechnet, nicht geschätzt.
-    </p>
-    <div class="grid grid-cols-3 gap-2 mb-6 text-xs">
-      <div v-for="(f, i) in FAKTOREN" :key="i" class="rounded border border-stone-300 bg-white p-2 text-center">
-        <div class="num font-medium">{{ komma(f, 4) }}&times;</div>
-        <div class="num text-stone-500">{{ INKREMENTE[i] > 0 ? '+' : '' }}{{ INKREMENTE[i] }} kr</div>
-      </div>
-    </div>
 
     <label class="flex items-center gap-2 text-sm text-stone-700 mb-4">
       <span>Entscheidungen pro Tag:</span>
@@ -161,7 +141,6 @@
     <h2 class="text-xl font-semibold mb-4">Zehn deiner Wetten wurden ausgelost.</h2>
     <div class="rounded-lg border border-stone-300 bg-white p-5 mb-5">
       <p class="text-sm text-stone-600 mb-3">
-        Dynamik an diesem Tag: <strong>{{ dynamik === 'mult' ? 'multiplikativ' : 'additiv' }}</strong>.
         Start 1.000 kr, nach der passiven Phase
         <span class="num">{{ komma(vermoegenNachPassiv, 2) }} kr</span>.
       </p>
@@ -178,6 +157,46 @@
 
   <!-- ===================== AUSWERTUNG ===================== -->
   <section v-if="phase === 'auswertung'" class="mb-12">
+    <div class="rounded-lg border-l-4 border-stone-900 bg-white p-5 mb-6">
+      <h2 class="font-semibold mb-2">Die Auflösung</h2>
+      <p class="text-sm text-stone-700 leading-relaxed mb-3">
+        Die beiden Tage waren nicht gleich. An einem Tag wurde dein Vermögen
+        <strong>addiert</strong>: jedes Bild stand für einen festen Betrag zwischen
+        <span class="num">&minus;428</span> und <span class="num">+428</span> kr. Am
+        anderen wurde es <strong>multipliziert</strong>: jedes Bild stand für einen
+        Faktor zwischen <span class="num">0,447</span> und <span class="num">2,239</span>.
+      </p>
+      <p class="text-sm text-stone-700 leading-relaxed mb-3">
+        Gesagt wurde dir das nicht, und das war kein Versehen. Im Original erfuhren die
+        Teilnehmer es ebenso wenig: gleiche Anleitung, gleicher Ablauf, gleicher Scanner,
+        und die Reihenfolge der beiden Tage war über die Gruppe ausbalanciert. Gemessen
+        wird, ob sich deine Risikoneigung mit der Dynamik verschiebt — ohne dass du
+        wusstest, dass es eine gibt.
+      </p>
+      <p class="text-sm text-stone-700 leading-relaxed">
+        Gespielt hast du das <strong>Kopenhagen-Experiment</strong> von 2017 am DRCMR:
+        Meder, Rabe, Morville, Madsen, Koudahl, Dolan, Siebner, Hulme und Peters,
+        veröffentlicht 2021. 18 Menschen, zwei Tage im Kernspintomografen, echtes Geld.
+        Die Quellenangabe steht ganz unten.
+      </p>
+    </div>
+
+    <h2 class="font-semibold mb-3">Die neun Reize</h2>
+    <p class="text-sm text-stone-600 mb-4">
+      Additiv: Beträge von <span class="num">&minus;428</span> bis
+      <span class="num">+428</span> DKK, gleichmäßig auf einer linearen Skala.
+      Multiplikativ: Wachstumsfaktoren von <span class="num">0,447</span> (gut halbieren)
+      bis <span class="num">2,239</span> (gut verdoppeln), gleichmäßig auf einer
+      <em>logarithmischen</em> Skala. Beide Reihen aus den Rohdaten des Papiers
+      nachgerechnet, nicht geschätzt.
+    </p>
+    <div class="grid grid-cols-3 gap-2 mb-8 text-xs">
+      <div v-for="(f, i) in FAKTOREN" :key="i" class="rounded border border-stone-300 bg-white p-2 text-center">
+        <div class="num font-medium">{{ komma(f, 4) }}&times;</div>
+        <div class="num text-stone-500">{{ INKREMENTE[i] > 0 ? '+' : '' }}{{ INKREMENTE[i] }} kr</div>
+      </div>
+    </div>
+
     <h2 class="text-xl font-semibold mb-4">Deine Risikoaversion</h2>
 
     <p class="text-stone-600 text-sm mb-5 leading-relaxed">
@@ -275,14 +294,20 @@
   </section>
 
   <footer class="border-t border-stone-300 pt-6 text-sm text-stone-500 leading-relaxed">
-    <p class="mb-2">
-      Quelle: Meder D, Rabe F, Morville T, Madsen KH, Koudahl MT, Dolan RJ, Siebner HR,
-      Hulme OJ (2021), <em>Ergodicity-breaking reveals time optimal decision making in
-      humans</em>, PLoS Comput Biol 17(9): e1009217.
-      <a class="underline" href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1009217">Papier</a> &middot;
-      <a class="underline" href="https://github.com/ollie-hulme/ergodicity-breaking-choice-experiment">Daten und Code</a>.
+    <template v-if="phase === 'auswertung'">
+      <p class="mb-2">
+        Quelle: Meder D, Rabe F, Morville T, Madsen KH, Koudahl MT, Dolan RJ, Siebner HR,
+        Hulme OJ (2021), <em>Ergodicity-breaking reveals time optimal decision making in
+        humans</em>, PLoS Comput Biol 17(9): e1009217.
+        <a class="underline" href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1009217">Papier</a> &middot;
+        <a class="underline" href="https://github.com/ollie-hulme/ergodicity-breaking-choice-experiment">Daten und Code</a>.
+      </p>
+      <p>Die neun Wachstumsraten sind aus den Rohdaten des Repositoriums gelesen, nicht aus dem Fließtext geschätzt.</p>
+    </template>
+    <p v-else>
+      Alles läuft im Browser. Nichts wird gesendet, nichts gespeichert. Welches Experiment
+      das ist und woher es stammt, steht hier, sobald du durch bist.
     </p>
-    <p>Die neun Wachstumsraten sind aus den Rohdaten des Repositoriums gelesen, nicht aus dem Fließtext geschätzt.</p>
   </footer>
 </div>
 
