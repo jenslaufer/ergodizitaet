@@ -3,10 +3,23 @@ import { test, expect } from '@playwright/test';
 // Words that would tell a player what is being measured. If any of these appear
 // before the results screen, the page biases its own experiment - which is the
 // defect this page was rebuilt to remove (Jens, 2026-09-21 07:49).
+//
+// Compared case-insensitively, and that is not cosmetic: the kicker above the
+// headline is rendered uppercase by Tailwind, and innerText returns it uppercase.
+// A case-sensitive check reads ERGODICITY as clean - measured 2026-09-21 by
+// injecting exactly that word into the kicker and watching all six tests stay
+// green. The old page had KOPENHAGEN 2017 in that very line.
 const REVEALING = [
-  'Ergodic', 'ergodic', 'Copenhagen', 'DRCMR', 'Hulme', 'Meder', 'PLoS',
+  'ergodic', 'copenhagen', 'drcmr', 'hulme', 'meder', 'plos',
   'additive', 'multiplicative', 'eta', 'risk aversion', 'utility',
 ];
+
+function assertClean(text, where) {
+  const haystack = String(text).toLowerCase();
+  for (const word of REVEALING) {
+    expect(haystack, `"${word}" ${where}`).not.toContain(word);
+  }
+}
 
 async function playOneDay(page) {
   await page.getByRole('button', { name: 'Run through the rest' }).click();
@@ -17,25 +30,19 @@ async function playOneDay(page) {
   }
 }
 
-async function visibleText(page) {
-  return page.locator('body').innerText();
-}
+const visibleText = page => page.locator('body').innerText();
 
 test.describe('nothing is revealed before the results', () => {
   test('the entry screen names neither the experiment nor the theory', async ({ page }) => {
     await page.goto('/');
-    const text = await visibleText(page);
-    for (const word of REVEALING) expect(text, `"${word}" on the entry screen`).not.toContain(word);
+    assertClean(await visibleText(page), 'on the entry screen');
   });
 
   test('title and meta description stay neutral', async ({ page }) => {
     await page.goto('/');
-    const title = await page.title();
-    const desc = await page.locator('meta[name="description"]').getAttribute('content');
-    for (const word of REVEALING) {
-      expect(title, `"${word}" in the title`).not.toContain(word);
-      expect(desc, `"${word}" in the meta description`).not.toContain(word);
-    }
+    assertClean(await page.title(), 'in the title');
+    assertClean(await page.locator('meta[name="description"]').getAttribute('content'),
+      'in the meta description');
   });
 
   test('the screen between the two days does not name the dynamic', async ({ page }) => {
@@ -43,8 +50,7 @@ test.describe('nothing is revealed before the results', () => {
     await page.getByRole('button', { name: 'Start day 1' }).click();
     await playOneDay(page);
     await expect(page.getByRole('button', { name: 'Start day 2' })).toBeVisible();
-    const text = await page.locator('section').innerText();
-    for (const word of REVEALING) expect(text, `"${word}" on the day-end screen`).not.toContain(word);
+    assertClean(await page.locator('section').innerText(), 'on the day-end screen');
   });
 
   test('the source appears only in the footer of the results', async ({ page }) => {
