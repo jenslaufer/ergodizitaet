@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Das Kopenhagen-Experiment — Ergodizität</title>
-<meta name="description" content="Warum der Erwartungswert nicht das ist, was ein Mensch erlebt. Interaktiv, nach Meder et al. 2021.">
+<title>Das Kopenhagen-Experiment — nachgebaut</title>
+<meta name="description" content="Das Experiment von Meder, Hulme et al. (PLOS Comput Biol 2021) als spielbarer Nachbau: passive Lernphase, aktive Wettphase, eigene Risikoaversion eta.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231c1917'/%3E%3Cpath d='M4 22 L11 10 L18 26 L28 6' stroke='%23fafaf9' stroke-width='2.5' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
@@ -14,379 +14,548 @@
 </style>
 </head>
 <body class="bg-stone-50 text-stone-900 antialiased">
-<div id="app" class="mx-auto max-w-2xl px-5 py-10 sm:py-16">
+<div id="app" class="mx-auto max-w-2xl px-5 py-10 sm:py-14">
 
-  <header class="mb-14">
-    <p class="text-xs uppercase tracking-widest text-stone-500 mb-3">Kopenhagen, 2019</p>
+  <header class="mb-10">
+    <p class="text-xs uppercase tracking-widest text-stone-500 mb-3">Kopenhagen 2017 &middot; DRCMR</p>
     <h1 class="text-3xl sm:text-4xl font-semibold leading-tight mb-4">
-      Der Erwartungswert ist nicht das, was du erlebst.
+      Das Kopenhagen-Experiment, nachgebaut.
     </h1>
     <p class="text-stone-600 leading-relaxed">
-      18 Menschen spielten an zwei Tagen um echtes Geld. Am einen Tag wurde ihr Vermögen
-      addiert, am anderen multipliziert. Die Wette war jedes Mal dieselbe — ihr Verhalten
-      nicht. Diese Seite lässt dich dasselbe erleben.
+      Meder, Rabe, Morville, Madsen, Koudahl, Dolan, Siebner, Hulme, Peters:
+      <em>Ergodicity-breaking reveals time optimal decision making in humans</em>,
+      PLOS Computational Biology 2021. 18 Menschen, zwei Tage, echtes Geld.
+      An einem Tag wurde ihr Vermoegen addiert, am anderen multipliziert.
+      Die Frage: verschiebt sich die Risikoneigung mit der Dynamik?
     </p>
   </header>
 
-  <!-- 1 — Die Wette, Antwort zuerst -->
-  <section class="mb-16">
-    <h2 class="text-xl font-semibold mb-4">1 &middot; Die Wette</h2>
-    <div class="rounded-lg border border-stone-300 bg-white p-5 mb-5">
-      <p class="mb-3">Eine Münze. Bei <em>Kopf</em> wächst dein Vermögen um <strong>50 %</strong>,
-      bei <em>Zahl</em> schrumpft es um <strong>40 %</strong>.</p>
-      <p class="text-stone-600 text-sm">Der Erwartungswert pro Wurf ist
-      <span class="num">(1,5 + 0,6) / 2 = 1,05</span> — also <strong>+5 %</strong>. Jeder Wurf
-      ist im Mittel ein Gewinn.</p>
+  <!-- ===================== INTRO ===================== -->
+  <section v-if="phase === 'intro'" class="mb-12">
+    <div class="rounded-lg border border-stone-300 bg-white p-5 mb-6">
+      <h2 class="font-semibold mb-3">Der Ablauf im Original</h2>
+      <ol class="list-decimal ml-5 space-y-2 text-sm text-stone-700 leading-relaxed">
+        <li><strong>Startvermoegen 1.000 DKK</strong> an jedem der beiden Tage.</li>
+        <li><strong>Passive Phase.</strong> Neun Bildreize, jeder mit einer festen Wirkung
+        auf das Vermoegen. Jeder Reiz wird 37-mal gezeigt, 333 Durchgaenge. Nichts zu
+        entscheiden — nur beobachten und lernen, welches Bild was tut.</li>
+        <li><strong>Aktive Phase.</strong> 312 Entscheidungen zwischen zwei Wetten. Jede
+        Wette besteht aus zwei der gelernten Bilder, jedes mit 50 % Wahrscheinlichkeit.
+        <strong>Die Ausgaenge bleiben verborgen.</strong></li>
+        <li><strong>Am Tagesende werden 10 der gewaehlten Wetten zufaellig ausgelost</strong>
+        und auf das Vermoegen angewendet. Das ist die Auszahlung.</li>
+        <li>Am zweiten Tag dasselbe, andere Bilder, andere Dynamik.</li>
+      </ol>
     </div>
 
-    <p class="font-medium mb-3">Bevor du weiterliest: Du spielst 100 Runden. Was passiert?</p>
-    <div class="grid gap-2 mb-4">
-      <button v-for="o in optionen" :key="o.id" @click="tippen(o.id)"
-        :class="['text-left rounded-lg border px-4 py-3 transition',
-                 tipp === o.id ? 'border-stone-900 bg-stone-900 text-white'
-                               : 'border-stone-300 bg-white hover:border-stone-500']">
-        {{ o.text }}
-      </button>
-    </div>
-    <p v-if="!tipp" class="text-sm text-stone-500">
-      Erst tippen, dann aufdecken. Das ist der ganze Trick an dieser Seite — die Antwort
-      wirkt nur, wenn du vorher eine eigene hattest.
-    </p>
-    <div v-else class="rounded-lg border-l-4 border-stone-900 bg-white p-5">
-      <p class="mb-3">
-        <strong>Du verlierst fast alles.</strong> Nach 100 Runden bleibt dem typischen
-        Spieler rund <span class="num">0,5 %</span> seines Einsatzes. Nach 1.000 Runden ist
-        praktisch nichts mehr da.
-      </p>
-      <p class="text-stone-600 text-sm">
-        Und der Erwartungswert stimmt trotzdem. Beides ist wahr — das ist der Punkt.
-        <span v-if="tipp === 'wachsen'">Du hast auf den Erwartungswert gesetzt. Das tun die meisten.</span>
-        <span v-else-if="tipp === 'verlieren'">Du hast es geahnt. Dann ist die nächste Frage, <em>warum</em>.</span>
+    <div class="rounded-lg border-l-4 border-stone-900 bg-white p-5 mb-6">
+      <p class="text-sm text-stone-700 leading-relaxed">
+        <strong>Die Teilnehmer erfuhren nie, dass sich die Tage unterscheiden.</strong>
+        Gleiche Anleitung, gleicher Ablauf, gleicher Scanner. Nur die Mathematik hinter
+        den Bildern war eine andere — und die Reihenfolge der beiden Tage war ueber die
+        Gruppe ausbalanciert.
       </p>
     </div>
-  </section>
 
-  <!-- 2 — Simulation -->
-  <section v-if="tipp" class="mb-16">
-    <h2 class="text-xl font-semibold mb-4">2 &middot; Ein Mensch, 100 Würfe</h2>
-    <p class="text-stone-600 mb-4 leading-relaxed">
-      Ein einzelner Weg durch die Zeit. Die Skala ist logarithmisch, sonst klebt die Kurve
-      am Boden und man sieht nichts.
+    <h2 class="font-semibold mb-3">Die neun Reize</h2>
+    <p class="text-sm text-stone-600 mb-4">
+      Additiv: Betraege von <span class="num">&minus;428</span> bis
+      <span class="num">+428</span> DKK, gleichmaessig auf einer linearen Skala.
+      Multiplikativ: Wachstumsfaktoren von <span class="num">0,447</span> (gut halbieren)
+      bis <span class="num">2,239</span> (gut verdoppeln), gleichmaessig auf einer
+      <em>logarithmischen</em> Skala. Beide Reihen aus den Rohdaten des Papiers
+      nachgerechnet, nicht geschaetzt.
     </p>
-
-    <div class="rounded-lg border border-stone-300 bg-white p-4 mb-4">
-      <canvas ref="pfadCanvas" class="w-full" height="220"></canvas>
-      <div class="flex flex-wrap items-center gap-3 mt-4">
-        <button @click="neuerPfad" class="rounded-md bg-stone-900 px-4 py-2 text-sm text-white hover:bg-stone-700">
-          Noch einmal würfeln
-        </button>
-        <span class="text-sm text-stone-600">
-          Endstand: <strong class="num">{{ fmt(pfadEnde) }}&times;</strong> des Einsatzes
-        </span>
+    <div class="grid grid-cols-3 gap-2 mb-6 text-xs">
+      <div v-for="(f, i) in FAKTOREN" :key="i" class="rounded border border-stone-300 bg-white p-2 text-center">
+        <div class="num font-medium">{{ komma(f, 4) }}&times;</div>
+        <div class="num text-stone-500">{{ INKREMENTE[i] > 0 ? '+' : '' }}{{ INKREMENTE[i] }} kr</div>
       </div>
     </div>
 
-    <h2 class="text-xl font-semibold mb-4 mt-10">3 &middot; 10.000 Menschen, dieselbe Wette</h2>
-    <p class="text-stone-600 mb-4 leading-relaxed">
-      Jetzt spielen 10.000 Leute je 100 Runden. Der <em>Durchschnitt aller</em> steigt — ein
-      paar wenige werden absurd reich und ziehen den Mittelwert hoch. Der
-      <em>mittlere Spieler</em> ist ruiniert.
+    <label class="flex items-center gap-2 text-sm text-stone-700 mb-4">
+      <span>Entscheidungen pro Tag:</span>
+      <select v-model.number="nAktiv" class="rounded border border-stone-300 px-2 py-1">
+        <option :value="24">24 (kurz, ~4 Min)</option>
+        <option :value="48">48 (genauer, ~8 Min)</option>
+        <option :value="96">96 (nah am Original)</option>
+      </select>
+    </label>
+    <button @click="start" class="rounded-md bg-stone-900 px-5 py-2.5 text-sm text-white hover:bg-stone-700">
+      Tag 1 beginnen
+    </button>
+    <p class="text-xs text-stone-500 mt-3">
+      Das Original hatte 312 Entscheidungen pro Tag. Je weniger du spielst, desto
+      unschaerfer faellt deine eigene Schaetzung am Ende aus — die Seite sagt dir, wie
+      unscharf.
     </p>
-
-    <div class="rounded-lg border border-stone-300 bg-white p-5">
-      <button v-if="!ensemble" @click="rechneEnsemble"
-        class="rounded-md bg-stone-900 px-4 py-2 text-sm text-white hover:bg-stone-700">
-        10.000 Spieler durchrechnen
-      </button>
-      <dl v-else class="grid grid-cols-2 gap-4 text-sm">
-        <div class="col-span-2 sm:col-span-1">
-          <dt class="text-stone-500">Durchschnitt aller 10.000</dt>
-          <dd class="text-2xl font-semibold num">{{ fmt(ensemble.mittel) }}&times;</dd>
-        </div>
-        <div class="col-span-2 sm:col-span-1">
-          <dt class="text-stone-500">Der mittlere Spieler (Median)</dt>
-          <dd class="text-2xl font-semibold num text-red-700">{{ fmt(ensemble.median) }}&times;</dd>
-        </div>
-        <div class="col-span-2 border-t border-stone-200 pt-3">
-          <dt class="text-stone-500">Unter dem Einsatz gelandet</dt>
-          <dd class="num"><strong>{{ ensemble.verloren }}</strong> von 10.000
-            ({{ (ensemble.verloren/100).toFixed(1) }} %)</dd>
-        </div>
-        <div class="col-span-2">
-          <dt class="text-stone-500">Reichster Spieler</dt>
-          <dd class="num">{{ fmt(ensemble.max) }}&times; — er allein trägt den Durchschnitt</dd>
-        </div>
-        <div class="col-span-2 border-t border-stone-200 pt-3">
-          <dt class="text-stone-500">Erwartungswert laut Theorie</dt>
-          <dd class="num">1,05<sup>100</sup> = <strong>131,50&times;</strong> —
-            erreicht von {{ ensemble.erreichen }} der 10.000</dd>
-        </div>
-      </dl>
-      <p v-if="ensemble" class="mt-4 text-sm text-stone-600 leading-relaxed">
-        Der gemessene Durchschnitt liegt fast immer <em>unter</em> den 131,50&times;, und das
-        ist kein Rechenfehler, sondern derselbe Befund noch einmal. Getragen wird der
-        Erwartungswert von einer Handvoll extremer Wege: Rund 1 % der Spieler kommt
-        überhaupt in seine Nähe, und die paar darüber bestimmen allein, wie hoch der
-        Durchschnitt ausfällt. In einer Stichprobe von 10.000 sind sie mal dabei und mal
-        nicht — darum springt der Durchschnitt bei jedem Lauf, während der Median stehen
-        bleibt. Drück den Knopf ein paar Mal.
-      </p>
-      <p v-if="ensemble" class="mt-3">
-        <button @click="rechneEnsemble"
-          class="rounded-md border border-stone-300 bg-white px-3 py-1.5 text-sm hover:border-stone-500">
-          Noch einmal 10.000 Spieler
-        </button>
-      </p>
-    </div>
-
-    <div class="mt-6 rounded-lg bg-stone-900 text-stone-100 p-5 leading-relaxed">
-      <p class="mb-2 font-medium">Das ist Ergodizitätsbruch, und mehr steckt nicht dahinter:</p>
-      <p class="text-stone-300 text-sm">
-        Der <strong>Ensemble-Mittelwert</strong> (viele Menschen, ein Moment) wächst mit
-        <span class="num">+5 %</span> pro Runde. Der <strong>Zeit-Mittelwert</strong>
-        (ein Mensch, viele Momente) schrumpft mit
-        <span class="num">&radic;(1,5 &middot; 0,6) &minus; 1 = &minus;5,1 %</span> pro Runde.
-        Bei einer ergodischen Größe wären beide gleich. Hier sind sie es nicht — und
-        <em>du</em> bist immer der eine Mensch, nie das Ensemble.
-      </p>
-    </div>
   </section>
 
-  <!-- 3 — Die Manipulation -->
-  <section v-if="tipp" class="mb-16">
-    <h2 class="text-xl font-semibold mb-4">4 &middot; Die Kopenhagen-Manipulation</h2>
-    <p class="text-stone-600 mb-5 leading-relaxed">
-      Genau hier setzt das Experiment an. Dieselben Teilnehmer, dieselbe Art von Wette —
-      nur einmal wird zum Vermögen <em>addiert</em> und einmal damit <em>multipliziert</em>.
-      Schalte um und sieh, was mit demselben Spieler passiert.
+  <!-- ===================== PASSIV ===================== -->
+  <section v-if="phase === 'passiv'" class="mb-12">
+    <p class="text-xs uppercase tracking-widest text-stone-500 mb-2">
+      Tag {{ tag + 1 }} &middot; Passive Phase &middot; {{ passivIndex }}/{{ passivSeq.length }}
+    </p>
+    <h2 class="text-xl font-semibold mb-4">Schau zu, was die Bilder mit deinem Geld machen.</h2>
+    <p class="text-stone-600 text-sm mb-6 leading-relaxed">
+      Nichts zu entscheiden. Merk dir, welches Bild dein Vermoegen wie stark bewegt —
+      in der naechsten Phase waehlst du zwischen ihnen, und dort siehst du keine Zahlen mehr.
     </p>
 
-    <div class="inline-flex rounded-lg border border-stone-300 bg-white p-1 mb-5">
-      <button v-for="m in ['additiv','multiplikativ']" :key="m" @click="setModus(m)"
-        :class="['px-4 py-2 text-sm rounded-md transition',
-                 modus === m ? 'bg-stone-900 text-white' : 'text-stone-700 hover:bg-stone-100']">
-        {{ m }}
+    <div class="rounded-lg border border-stone-300 bg-white p-6 mb-4 text-center">
+      <div class="mx-auto mb-4 h-32 w-32" v-html="aktuellesBild"></div>
+      <div class="num text-3xl font-semibold" :class="letzteAenderung > 0 ? 'text-emerald-700' : letzteAenderung < 0 ? 'text-rose-700' : ''">
+        {{ komma(vermoegen, 2) }} kr
+      </div>
+      <div v-if="letzteAenderung !== null" class="num text-sm mt-1"
+           :class="letzteAenderung > 0 ? 'text-emerald-700' : letzteAenderung < 0 ? 'text-rose-700' : 'text-stone-500'">
+        {{ letzteAenderung > 0 ? '+' : '' }}{{ komma(letzteAenderung, 2) }} kr
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <button @click="passivSchritt" class="rounded-md bg-stone-900 px-5 py-2.5 text-sm text-white hover:bg-stone-700">
+        Naechster Reiz
+      </button>
+      <button @click="passivDurchlaufen" class="rounded-md border border-stone-300 bg-white px-4 py-2.5 text-sm hover:border-stone-500">
+        Rest im Schnelldurchlauf
+      </button>
+    </div>
+    <p class="text-xs text-stone-500 mt-3">
+      Im Original musste hier binnen einer Sekunde eine Taste gedrueckt werden, damit der
+      Scanner einen sauberen Zeitpunkt hat. Hier draengt nichts.
+    </p>
+  </section>
+
+  <!-- ===================== AKTIV ===================== -->
+  <section v-if="phase === 'aktiv'" class="mb-12">
+    <p class="text-xs uppercase tracking-widest text-stone-500 mb-2">
+      Tag {{ tag + 1 }} &middot; Aktive Phase &middot; {{ aktivIndex + 1 }}/{{ aktivTrials.length }}
+    </p>
+    <h2 class="text-xl font-semibold mb-2">Welche Wette nimmst du?</h2>
+    <p class="text-stone-600 text-sm mb-6">
+      Jede Wette: eins der beiden Bilder trifft ein, je 50 %. Was herauskam, erfaehrst du
+      nicht. Dein Vermoegen steht bei
+      <span class="num font-medium">{{ komma(vermoegen, 2) }} kr</span>.
+    </p>
+
+    <div class="grid grid-cols-2 gap-4">
+      <button v-for="seite in ['links','rechts']" :key="seite" @click="waehlen(seite)"
+        class="rounded-lg border border-stone-300 bg-white p-4 hover:border-stone-900 transition">
+        <div class="flex justify-center gap-2 mb-3">
+          <div class="h-20 w-20" v-html="bildFuer(aktuellerTrial[seite][0])"></div>
+          <div class="h-20 w-20" v-html="bildFuer(aktuellerTrial[seite][1])"></div>
+        </div>
+        <div class="text-xs text-stone-500">Wette {{ seite === 'links' ? 1 : 2 }}</div>
       </button>
     </div>
 
-    <div class="rounded-lg border border-stone-300 bg-white p-5">
-      <p class="text-sm text-stone-600 mb-4">
-        <template v-if="modus === 'additiv'">
-          <strong>Additiv:</strong> Kopf bringt <span class="num">+50</span>, Zahl kostet
-          <span class="num">&minus;40</span> — feste Beträge, unabhängig vom Stand. Ein
-          Verlust lässt sich später eins zu eins aufholen.
-        </template>
-        <template v-else>
-          <strong>Multiplikativ:</strong> Kopf bringt <span class="num">+50 %</span>, Zahl
-          kostet <span class="num">&minus;40 %</span>. Ein Verlust frisst einen Anteil, und
-          der fehlt danach bei jedem weiteren Wurf.
-        </template>
-      </p>
-      <dl class="grid grid-cols-2 gap-4 text-sm">
-        <div>
-          <dt class="text-stone-500">Ensemble-Mittel pro Runde</dt>
-          <dd class="text-xl font-semibold num text-emerald-700">{{ modus === 'additiv' ? '+5 Einheiten' : '+5,0 %' }}</dd>
-        </div>
-        <div>
-          <dt class="text-stone-500">Zeit-Mittel pro Runde</dt>
-          <dd :class="['text-xl font-semibold num', modus === 'additiv' ? 'text-emerald-700' : 'text-red-700']">
-            {{ modus === 'additiv' ? '+5 Einheiten' : '−5,1 %' }}
-          </dd>
-        </div>
-        <div class="col-span-2 border-t border-stone-200 pt-3">
-          <dt class="text-stone-500">Optimal ist dann</dt>
-          <dd><strong>{{ modus === 'additiv' ? 'lineare Nutzenfunktion' : 'logarithmische Nutzenfunktion' }}</strong>
-            — {{ modus === 'additiv' ? 'nimm jede Wette mit positivem Erwartungswert' : 'sei deutlich risikoscheuer, als der Erwartungswert nahelegt' }}</dd>
-        </div>
-      </dl>
-    </div>
-
-    <p class="text-stone-600 mt-5 leading-relaxed">
-      Beim additiven Tag fallen beide Mittelwerte zusammen — die Größe ist ergodisch, und
-      der Erwartungswert ist ein ehrlicher Ratgeber. Beim multiplikativen Tag laufen sie
-      auseinander, und wer dem Erwartungswert folgt, geht pleite.
-    </p>
-  </section>
-
-  <!-- 4 — Das Experiment -->
-  <section v-if="tipp" class="mb-16">
-    <h2 class="text-xl font-semibold mb-4">5 &middot; Was tatsächlich gemessen wurde</h2>
-    <div class="rounded-lg border border-stone-300 bg-white p-5 space-y-4 text-sm leading-relaxed">
-      <p>
-        <strong>18 Teilnehmer</strong> (geplant 20; einer schlief ein, einer lernte die Reize
-        nicht), 6 Frauen, Durchschnittsalter 25,8 Jahre. Zwei Testtage im Scanner, je rund
-        drei Stunden.
-      </p>
-      <p>
-        Jeder Tag begann mit <strong>1.000 DKK</strong> echtem Geld (rund 155 USD). Zuerst
-        eine passive Phase über 333 Durchgänge, in der die Teilnehmer lernten, welches Symbol
-        welche Vermögensänderung auslöst — am Ende stand wieder der Ausgangsbetrag. Danach
-        wählten sie wiederholt zwischen zwei Wetten.
-      </p>
-      <p>
-        Sie wurden <strong>nicht</strong> darüber aufgeklärt, dass sich die Tage in der
-        Dynamik unterscheiden, und bekamen keinen Grund, einen Unterschied zu erwarten.
-      </p>
-      <p class="border-l-4 border-stone-900 pl-4">
-        <strong>Das Ergebnis:</strong> Die geschätzten Nutzenfunktionen verschoben sich vom
-        additiven zum multiplikativen Tag von <strong>annähernd linear</strong> zu
-        <strong>annähernd logarithmisch</strong> — also dorthin, wo das Zeit-Mittel des
-        Vermögenswachstums maximal ist. Die vorherrschende Entscheidungstheorie erklärt das
-        nicht: sie behandelt Risikoscheu als Eigenschaft der Person, nicht der Dynamik.
-      </p>
-      <p class="text-stone-500">
-        Meder, Rabe, Morville, Madsen, Koudahl, Dolan, Siebner, Hulme:
-        „Ergodicity-breaking reveals time optimal decision making in humans“,
-        PLOS Computational Biology, 2021.
-        <a class="underline decoration-stone-400 hover:decoration-stone-900"
-           href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1009217">
-          Volltext (offen zugänglich)</a> ·
-        <a class="underline decoration-stone-400 hover:decoration-stone-900"
-           href="https://arxiv.org/abs/1906.04652">Preprint</a>
-      </p>
+    <div class="mt-4 h-1 w-full rounded bg-stone-200">
+      <div class="h-1 rounded bg-stone-900" :style="{width: (100 * aktivIndex / aktivTrials.length) + '%'}"></div>
     </div>
   </section>
 
-  <!-- 5 — Konsequenz -->
-  <section v-if="tipp" class="mb-16">
-    <h2 class="text-xl font-semibold mb-4">6 &middot; Wo das im echten Leben zubeißt</h2>
-    <ul class="space-y-4 text-stone-700 leading-relaxed">
-      <li class="rounded-lg border border-stone-300 bg-white p-4">
-        <strong>Positionsgrößen.</strong> Ein Depot ist multiplikativ. Eine Position, die
-        dich bei einem Totalausfall um 40 % zurückwirft, braucht danach +67 %, nur um wieder
-        bei null zu sein. Der Erwartungswert der Position sagt darüber nichts.
-      </li>
-      <li class="rounded-lg border border-stone-300 bg-white p-4">
-        <strong>Entnahmeraten.</strong> Dieselbe Entnahme, die im Mittel über tausend
-        Ruhestände hält, kann in <em>deinem</em> einen Ruhestand reißen. Der Mittelwert über
-        Szenarien ist das Ensemble; du lebst die Zeitreihe.
-      </li>
-      <li class="rounded-lg border border-stone-300 bg-white p-4">
-        <strong>Backtests und Studien.</strong> „Im Durchschnitt funktioniert X“ ist eine
-        Ensemble-Aussage. Ob ein einzelner Weg sie überlebt, steht dort nicht — und genau das
-        ist die Frage, die du hast.
-      </li>
-      <li class="rounded-lg border border-stone-300 bg-white p-4">
-        <strong>Und die andere Richtung.</strong> Wo die Dynamik additiv ist — ein Gehalt,
-        viele kleine unabhängige Wetten, deren Einsatz du begrenzt — ist Risikoscheu
-        <em>teuer</em>. Die Optimierung hängt an der Dynamik, nicht am Charakter.
-      </li>
-    </ul>
+  <!-- ===================== TAGESENDE ===================== -->
+  <section v-if="phase === 'tagesende'" class="mb-12">
+    <p class="text-xs uppercase tracking-widest text-stone-500 mb-2">Tag {{ tag + 1 }} &middot; Auslosung</p>
+    <h2 class="text-xl font-semibold mb-4">Zehn deiner Wetten wurden ausgelost.</h2>
+    <div class="rounded-lg border border-stone-300 bg-white p-5 mb-5">
+      <p class="text-sm text-stone-600 mb-3">
+        Dynamik an diesem Tag: <strong>{{ dynamik === 'mult' ? 'multiplikativ' : 'additiv' }}</strong>.
+        Start 1.000 kr, nach der passiven Phase
+        <span class="num">{{ komma(vermoegenNachPassiv, 2) }} kr</span>.
+      </p>
+      <div class="num text-3xl font-semibold mb-1">{{ komma(vermoegen, 2) }} kr</div>
+      <p class="text-xs text-stone-500">
+        Auszahlung im Original auf 0–2.000 kr pro Tag begrenzt — hier ebenso:
+        <span class="num">{{ komma(Math.min(2000, Math.max(0, vermoegen)), 2) }} kr</span>.
+      </p>
+    </div>
+    <button @click="naechsterTag" class="rounded-md bg-stone-900 px-5 py-2.5 text-sm text-white hover:bg-stone-700">
+      {{ tag === 0 ? 'Tag 2 beginnen' : 'Auswertung' }}
+    </button>
   </section>
 
-  <footer v-if="tipp" class="border-t border-stone-300 pt-6 text-sm text-stone-500">
-    <p>
-      Die Simulationen laufen im Browser, nichts wird gesendet. Quelltext:
-      <a class="underline decoration-stone-400 hover:decoration-stone-900"
-         href="https://github.com/jenslaufer/ergodizitaet">github.com/jenslaufer/ergodizitaet</a>
+  <!-- ===================== AUSWERTUNG ===================== -->
+  <section v-if="phase === 'auswertung'" class="mb-12">
+    <h2 class="text-xl font-semibold mb-4">Deine Risikoaversion</h2>
+
+    <p class="text-stone-600 text-sm mb-5 leading-relaxed">
+      Aus deinen Entscheidungen wird dasselbe Modell geschaetzt wie im Papier:
+      isoelastischer Nutzen mit einem Parameter <em>eta</em>.
+      <span class="num">eta = 0</span> heisst risikoneutral (linearer Nutzen),
+      <span class="num">eta = 1</span> heisst logarithmischer Nutzen.
+      Die Vorhersage der Ergodizitaets-Theorie: <strong>eta = 0 am additiven Tag,
+      eta = 1 am multiplikativen</strong> — denn das maximiert jeweils die Wachstumsrate
+      ueber die Zeit, nicht den Erwartungswert.
     </p>
+
+    <div class="grid grid-cols-2 gap-3 mb-6">
+      <div class="rounded-lg border border-stone-300 bg-white p-4">
+        <div class="text-xs uppercase tracking-wide text-stone-500 mb-1">Additiv</div>
+        <div class="num text-2xl font-semibold">eta = {{ komma(etaAdd, 2) }}</div>
+        <div class="num text-xs text-stone-500">optimal 0 &middot; 18 Personen: 0,15</div>
+      </div>
+      <div class="rounded-lg border border-stone-300 bg-white p-4">
+        <div class="text-xs uppercase tracking-wide text-stone-500 mb-1">Multiplikativ</div>
+        <div class="num text-2xl font-semibold">eta = {{ komma(etaMult, 2) }}</div>
+        <div class="num text-xs text-stone-500">optimal 1 &middot; 18 Personen: 1,15</div>
+      </div>
+    </div>
+
+    <div class="rounded-lg border border-stone-300 bg-white p-4 mb-6">
+      <canvas ref="etaCanvas" class="w-full" height="300"></canvas>
+      <p class="text-xs text-stone-500 mt-3 leading-relaxed">
+        Waagerecht dein eta am additiven Tag, senkrecht am multiplikativen. Das Kreuz ist
+        der zeitoptimale Punkt (0&nbsp;|&nbsp;1). Die Diagonale ist, wo du laegest, wenn
+        die Dynamik dir egal waere. Der graue Punkt ist der Gruppenwert der 18 Teilnehmer
+        (0,15&nbsp;|&nbsp;1,15).
+      </p>
+    </div>
+
+    <div class="rounded-lg border-l-4 border-stone-900 bg-white p-5 mb-6">
+      <p class="mb-2"><strong>Dein Verschiebungsmass: {{ komma(etaMult - etaAdd, 2) }}</strong></p>
+      <p class="text-sm text-stone-600 leading-relaxed">
+        Im Papier betraegt diese Verschiebung im Mittel <span class="num">1,00</span>
+        (SD 0,35, 95-%-Intervall 0,83–1,17) — praktisch genau der Wert, den die Theorie
+        vorhersagt. Nicht ein einziger der 18 Teilnehmer lag naeher an der Diagonale als
+        am zeitoptimalen Punkt.
+      </p>
+    </div>
+
+    <div class="rounded-lg border border-stone-300 bg-white p-5 mb-6">
+      <h3 class="font-semibold mb-2 text-sm">Ohne jedes Modell</h3>
+      <p class="text-sm text-stone-600 leading-relaxed mb-2">
+        In den Durchgaengen, in denen der Erwartungswert und die Wachstumsrate ueber die
+        Zeit auf <em>verschiedene</em> Wetten zeigen, hast du die zeitoptimale gewaehlt:
+      </p>
+      <p class="num">
+        additiv <strong>{{ prozent(quoteAdd) }}</strong> von {{ nDiskAdd }} &middot;
+        multiplikativ <strong>{{ prozent(quoteMult) }}</strong> von {{ nDiskMult }}
+      </p>
+      <p class="text-xs text-stone-500 mt-2">
+        Das ist die modellfreie Auswertung des Papiers (Abb. 2). Dort stieg dieser Anteil
+        vom additiven zum multiplikativen Tag deutlich an.
+      </p>
+    </div>
+
+    <div class="rounded-lg border border-amber-300 bg-amber-50 p-5 mb-6">
+      <h3 class="font-semibold mb-2 text-sm">Was an diesem Nachbau nicht 1:1 ist</h3>
+      <ul class="list-disc ml-5 space-y-1 text-sm text-stone-700 leading-relaxed">
+        <li><strong>{{ nAktiv }} Entscheidungen statt 312</strong> pro Tag, und
+        {{ passivSeq.length }} statt 333 passive Durchgaenge. Deshalb steht dein eta auf
+        duennem Grund: <span class="num">&plusmn;{{ komma(etaFehler, 2) }}</span>
+        (Kruemmung der Likelihood).</li>
+        <li><strong>Kein echtes Geld.</strong> Im Original ging es um bis zu 4.000 DKK
+        Auszahlung, zusaetzlich zu 1.020 DKK Aufwandsentschaedigung.</li>
+        <li><strong>Kein Kernspintomograf, keine zwei getrennten Tage.</strong> Die
+        Teilnehmer lagen je drei Stunden im Scanner, an zwei verschiedenen Terminen.</li>
+        <li><strong>Andere Bilder.</strong> Das Original nutzte 18 feste Fraktalbilder,
+        hier sind es erzeugte Muster.</li>
+        <li><strong>Maximum-Likelihood statt hierarchischer Bayes-Schaetzung.</strong> Das
+        Papier schaetzt eta und beta gemeinsam ueber alle Teilnehmer; hier wird dein eta
+        einzeln und ohne Prior geschaetzt.</li>
+        <li>Die Wettpaare stammen aus demselben eingeschraenkten Raum wie im Original
+        (beide Wetten gemischt, alle vier Bilder verschieden, dazu
+        {{ nNoBrainer }} No-Brainer-Durchgaenge zur Kontrolle) — nur nicht alle 144.</li>
+      </ul>
+      <p class="text-sm text-stone-700 mt-3">
+        No-Brainer richtig: <span class="num font-medium">{{ nbRichtig }}/{{ nbGesamt }}</span>.
+        <span v-if="nbGesamt && nbRichtig / nbGesamt <= 0.5">Unter 50 % — im Original war das
+        der Ausschlussgrund fuer Teilnehmer 5.</span>
+      </p>
+    </div>
+
+    <button @click="nochmal" class="rounded-md bg-stone-900 px-5 py-2.5 text-sm text-white hover:bg-stone-700">
+      Noch einmal spielen
+    </button>
+  </section>
+
+  <footer class="border-t border-stone-300 pt-6 text-sm text-stone-500 leading-relaxed">
+    <p class="mb-2">
+      Quelle: Meder D, Rabe F, Morville T, Madsen KH, Koudahl MT, Dolan RJ, Siebner HR,
+      Hulme OJ (2021), <em>Ergodicity-breaking reveals time optimal decision making in
+      humans</em>, PLoS Comput Biol 17(9): e1009217.
+      <a class="underline" href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1009217">Papier</a> &middot;
+      <a class="underline" href="https://github.com/ollie-hulme/ergodicity-breaking-choice-experiment">Daten und Code</a>.
+    </p>
+    <p>Die neun Wachstumsraten sind aus den Rohdaten des Repositoriums gelesen, nicht aus dem Fliesstext geschaetzt.</p>
   </footer>
 </div>
 
 <script>
-const { createApp, ref, nextTick } = Vue;
+const { createApp, ref, computed, nextTick } = Vue;
 
-// Kopf +50 %, Zahl -40 %. Erwartungswert 1,05, Zeit-Mittel sqrt(1,5*0,6) = 0,9487.
-const HOCH = 1.5, RUNTER = 0.6, RUNDEN = 100;
+// Aus den Rohdaten: multiplikativ geometrisch mit Verhaeltnis 1,2232 um 1 herum,
+// additiv linear mit Schritt 107 um 0 herum. Beide neun Stufen.
+const R = 1.2232;
+const FAKTOREN = [-4,-3,-2,-1,0,1,2,3,4].map(k => Math.pow(R, k));
+const INKREMENTE = [-4,-3,-2,-1,0,1,2,3,4].map(k => k * 107);
 
-function pfad(n = RUNDEN) {
-  const w = [1];
-  for (let i = 0; i < n; i++) w.push(w[w.length - 1] * (Math.random() < 0.5 ? HOCH : RUNTER));
-  return w;
+function mische(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+// Neun unterscheidbare Muster, deterministisch aus dem Index erzeugt.
+function muster(i, farbe) {
+  const s = 100, c = farbe;
+  const teile = [];
+  const n = 3 + (i % 4);
+  for (let k = 0; k < n; k++) {
+    const r = 12 + k * (34 / n) + (i % 3) * 4;
+    if (i % 3 === 0) teile.push(`<circle cx="50" cy="50" r="${r}" fill="none" stroke="${c}" stroke-width="${2 + (i % 3)}"/>`);
+    else if (i % 3 === 1) teile.push(`<rect x="${50 - r}" y="${50 - r}" width="${2 * r}" height="${2 * r}" fill="none" stroke="${c}" stroke-width="${2 + (i % 3)}" transform="rotate(${i * 11 + k * 15} 50 50)"/>`);
+    else teile.push(`<polygon points="${50},${50 - r} ${50 + r},${50 + r} ${50 - r},${50 + r}" fill="none" stroke="${c}" stroke-width="${2 + (i % 2)}" transform="rotate(${i * 23 + k * 30} 50 50)"/>`);
+  }
+  return `<svg viewBox="0 0 ${s} ${s}" class="h-full w-full"><rect width="${s}" height="${s}" rx="6" fill="#fafaf9" stroke="#d6d3d1"/>${teile.join('')}</svg>`;
+}
+const FARBEN = ['#0f766e','#b45309','#7c3aed','#be123c','#1d4ed8','#4d7c0f','#a21caf','#0369a1','#78350f'];
+
+function nutzen(x, eta) {
+  if (x <= 0) return -1e9;
+  if (Math.abs(eta - 1) < 1e-7) return Math.log(x);
+  return (Math.pow(x, 1 - eta) - 1) / (1 - eta);
 }
 
 createApp({
-  setup() {
-    const optionen = [
-      { id: 'wachsen',   text: 'Mein Vermögen wächst — der Erwartungswert ist ja positiv.' },
-      { id: 'gleich',    text: 'Es bleibt ungefähr gleich, mal so mal so.' },
-      { id: 'verlieren', text: 'Ich verliere fast alles.' },
-    ];
-    const tipp = ref(null);
-    const modus = ref('multiplikativ');
-    const pfadCanvas = ref(null);
-    const pfadEnde = ref(1);
-    const ensemble = ref(null);
-
-    function fmt(x) {
-      if (x >= 100) return x.toLocaleString('de-DE', { maximumFractionDigits: 0 });
-      if (x >= 1) return x.toLocaleString('de-DE', { maximumFractionDigits: 2 });
-      if (x >= 0.001) return x.toLocaleString('de-DE', { maximumFractionDigits: 4 });
-      return x.toExponential(1).replace('.', ',');
-    }
-
-    function zeichne(w) {
-      const c = pfadCanvas.value;
-      if (!c) return;
-      const dpr = window.devicePixelRatio || 1;
-      const b = c.getBoundingClientRect();
-      c.width = b.width * dpr; c.height = 220 * dpr;
-      const ctx = c.getContext('2d');
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, b.width, 220);
-
-      const logs = w.map(v => Math.log10(Math.max(v, 1e-12)));
-      const lo = Math.min(...logs, -0.2), hi = Math.max(...logs, 0.2);
-      const x = i => (i / (w.length - 1)) * (b.width - 34) + 30;
-      const y = v => 200 - ((v - lo) / (hi - lo || 1)) * 180;
-
-      // Einsatz-Linie bei 1x
-      ctx.strokeStyle = '#a8a29e'; ctx.setLineDash([3, 3]); ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(30, y(0)); ctx.lineTo(b.width - 4, y(0)); ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.fillStyle = '#78716c'; ctx.font = '11px system-ui';
-      ctx.fillText('1×', 4, y(0) + 4);
-
-      ctx.strokeStyle = '#1c1917'; ctx.lineWidth = 1.6;
-      ctx.beginPath();
-      logs.forEach((v, i) => i ? ctx.lineTo(x(i), y(v)) : ctx.moveTo(x(i), y(v)));
-      ctx.stroke();
-
-      ctx.fillStyle = '#78716c';
-      ctx.fillText('0', 30, 215);
-      ctx.fillText(String(RUNDEN) + ' Runden', b.width - 82, 215);
-    }
-
-    function neuerPfad() {
-      const w = pfad();
-      pfadEnde.value = w[w.length - 1];
-      nextTick(() => zeichne(w));
-    }
-
-    function tippen(id) {
-      tipp.value = id;
-      nextTick(neuerPfad);
-    }
-
-    // Expected value of a single path after RUNDEN tosses: ((HOCH+RUNTER)/2)^RUNDEN.
-    const ERWARTUNG = Math.pow((HOCH + RUNTER) / 2, RUNDEN);
-
-    function rechneEnsemble() {
-      const n = 10000, enden = new Array(n);
-      let summe = 0, verloren = 0, max = 0, erreichen = 0;
-      for (let k = 0; k < n; k++) {
-        let v = 1;
-        for (let i = 0; i < RUNDEN; i++) v *= (Math.random() < 0.5 ? HOCH : RUNTER);
-        enden[k] = v; summe += v;
-        if (v < 1) verloren++;
-        if (v >= ERWARTUNG) erreichen++;
-        if (v > max) max = v;
-      }
-      enden.sort((a, b) => a - b);
-      ensemble.value = {
-        mittel: summe / n,
-        median: (enden[n / 2 - 1] + enden[n / 2]) / 2,
-        verloren, max, erreichen,
-      };
-    }
-
-    function setModus(m) { modus.value = m; }
-
-    window.addEventListener('resize', () => { if (tipp.value) neuerPfad(); });
-
-    return { optionen, tipp, tippen, modus, setModus, pfadCanvas, pfadEnde,
-             neuerPfad, ensemble, rechneEnsemble, fmt };
+  data() {
+    return {
+      FAKTOREN, INKREMENTE,
+      phase: 'intro',
+      nAktiv: 24,
+      nNoBrainer: 4,
+      tag: 0,
+      reihenfolge: ['mult', 'add'],
+      vermoegen: 1000,
+      vermoegenNachPassiv: 1000,
+      stimuli: [],           // 9 Objekte {wert, bild}
+      passivSeq: [], passivIndex: 0, letzteAenderung: null, aktuellesBild: '',
+      aktivTrials: [], aktivIndex: 0, aktuellerTrial: null,
+      protokoll: [],         // alle Entscheidungen beider Tage
+      etaAdd: 0, etaMult: 0, etaFehler: 0,
+      quoteAdd: 0, quoteMult: 0, nDiskAdd: 0, nDiskMult: 0,
+      nbRichtig: 0, nbGesamt: 0
+    };
   },
+  computed: {
+    dynamik() { return this.reihenfolge[this.tag]; }
+  },
+  methods: {
+    komma(x, n) { return (x ?? 0).toLocaleString('de-DE', { minimumFractionDigits: n, maximumFractionDigits: n }); },
+    prozent(x) { return (100 * (x || 0)).toFixed(0) + ' %'; },
+    bildFuer(i) { return this.stimuli[i].bild; },
+
+    start() {
+      this.reihenfolge = Math.random() < 0.5 ? ['mult', 'add'] : ['add', 'mult'];
+      this.tag = 0; this.protokoll = [];
+      this.tagVorbereiten();
+    },
+
+    tagVorbereiten() {
+      this.vermoegen = 1000;
+      const werte = this.dynamik === 'mult' ? FAKTOREN : INKREMENTE;
+      // Bilder werden pro Tag neu und zufaellig den neun Werten zugeordnet.
+      const idx = mische([0,1,2,3,4,5,6,7,8]);
+      this.stimuli = werte.map((w, i) => ({ wert: w, bild: muster(idx[i] + this.tag * 9, FARBEN[idx[i]]) }));
+      this.passivSeq = this.passivSequenz();
+      this.passivIndex = 0; this.letzteAenderung = null;
+      this.aktuellesBild = this.stimuli[0].bild;
+      this.phase = 'passiv';
+    },
+
+    // Jeder Reiz gleich oft -> das Vermoegen steht am Ende wieder bei 1.000 kr.
+    // Die Reihenfolge wird verworfen, wenn sie aus dem Korridor (0, 5000) laeuft.
+    passivSequenz() {
+      const proReiz = 4;
+      const basis = [];
+      for (let i = 0; i < 9; i++) for (let k = 0; k < proReiz; k++) basis.push(i);
+      for (let versuch = 0; versuch < 400; versuch++) {
+        const seq = mische(basis);
+        let x = 1000, ok = true;
+        for (const i of seq) {
+          x = this.dynamik === 'mult' ? x * this.stimuli[i].wert : x + this.stimuli[i].wert;
+          if (x <= 0 || x >= 5000) { ok = false; break; }
+        }
+        if (ok) { seq.push(Math.floor(Math.random() * 9)); return seq; }
+      }
+      return mische(basis).concat([Math.floor(Math.random() * 9)]);
+    },
+
+    passivSchritt() {
+      if (this.passivIndex >= this.passivSeq.length) return this.passivFertig();
+      const s = this.stimuli[this.passivSeq[this.passivIndex]];
+      const vorher = this.vermoegen;
+      this.vermoegen = this.dynamik === 'mult' ? this.vermoegen * s.wert : this.vermoegen + s.wert;
+      this.letzteAenderung = this.vermoegen - vorher;
+      this.aktuellesBild = s.bild;
+      this.passivIndex++;
+      if (this.passivIndex >= this.passivSeq.length) this.passivFertig();
+    },
+
+    passivDurchlaufen() { while (this.passivIndex < this.passivSeq.length) this.passivSchritt(); },
+
+    passivFertig() {
+      this.vermoegenNachPassiv = this.vermoegen;
+      this.aktivTrials = this.trialsBauen();
+      this.aktivIndex = 0;
+      this.aktuellerTrial = this.aktivTrials[0];
+      this.phase = 'aktiv';
+    },
+
+    // Bedingung des Originals: beide Wetten gemischt (ein Gewinn, ein Verlust),
+    // alle vier Bilder verschieden. Dazu einige No-Brainer zur Kontrolle.
+    trialsBauen() {
+      const gewinne = [5,6,7,8], verluste = [0,1,2,3];
+      const gemischt = [];
+      for (const g of gewinne) for (const v of verluste) gemischt.push([v, g]);
+      const paare = [];
+      for (const a of gemischt) for (const b of gemischt) {
+        if (new Set([...a, ...b]).size === 4) paare.push({ links: a, rechts: b, nb: false });
+      }
+      const gewaehlt = mische(paare).slice(0, this.nAktiv);
+      const nb = [];
+      for (let k = 0; k < this.nNoBrainer; k++) {
+        const gemeinsam = Math.floor(Math.random() * 9);
+        let a = Math.floor(Math.random() * 9), b = Math.floor(Math.random() * 9);
+        while (a === b || a === gemeinsam || b === gemeinsam) { a = Math.floor(Math.random() * 9); b = Math.floor(Math.random() * 9); }
+        nb.push({ links: [gemeinsam, a], rechts: [gemeinsam, b], nb: true });
+      }
+      return mische(gewaehlt.concat(nb));
+    },
+
+    waehlen(seite) {
+      const t = this.aktuellerTrial;
+      this.protokoll.push({
+        tag: this.tag, dynamik: this.dynamik, vermoegen: this.vermoegen,
+        links: t.links.slice(), rechts: t.rechts.slice(), gewaehlt: seite, nb: t.nb,
+        werte: this.stimuli.map(s => s.wert)
+      });
+      this.aktivIndex++;
+      if (this.aktivIndex >= this.aktivTrials.length) return this.aktivFertig();
+      this.aktuellerTrial = this.aktivTrials[this.aktivIndex];
+    },
+
+    // Zehn der gewaehlten Wetten werden ausgelost und der Reihe nach angewendet.
+    aktivFertig() {
+      const heute = this.protokoll.filter(p => p.tag === this.tag);
+      const gezogen = mische(heute).slice(0, Math.min(10, heute.length));
+      for (const p of gezogen) {
+        const paar = p.gewaehlt === 'links' ? p.links : p.rechts;
+        const i = paar[Math.random() < 0.5 ? 0 : 1];
+        this.vermoegen = p.dynamik === 'mult' ? this.vermoegen * p.werte[i] : this.vermoegen + p.werte[i];
+      }
+      this.phase = 'tagesende';
+    },
+
+    naechsterTag() {
+      if (this.tag === 0) { this.tag = 1; this.tagVorbereiten(); }
+      else { this.auswerten(); }
+    },
+
+    // Ausgang einer Wette als resultierendes Vermoegen.
+    ausgang(p, i) { return p.dynamik === 'mult' ? p.vermoegen * p.werte[i] : p.vermoegen + p.werte[i]; },
+
+    logLik(entsch, eta, beta) {
+      let ll = 0;
+      for (const p of entsch) {
+        const u0 = nutzen(p.vermoegen, eta);
+        const eu = s => (nutzen(this.ausgang(p, s[0]), eta) + nutzen(this.ausgang(p, s[1]), eta)) / 2 - u0;
+        const d = beta * (eu(p.links) - eu(p.rechts));
+        const pl = 1 / (1 + Math.exp(-Math.max(-500, Math.min(500, d))));
+        ll += Math.log(Math.max(1e-12, p.gewaehlt === 'links' ? pl : 1 - pl));
+      }
+      return ll;
+    },
+
+    // eta per Gitter, beta ueber viele Groessenordnungen mitgefuehrt (der Nutzenmassstab
+    // aendert sich mit eta um Zehnerpotenzen, ein festes beta waere hier sinnlos).
+    etaSchaetzen(entsch) {
+      if (!entsch.length) return { eta: 0, fehler: NaN };
+      const betas = []; for (let e = -8; e <= 4; e += 0.25) betas.push(Math.pow(10, e));
+      let best = -Infinity, bestEta = 0; const kurve = [];
+      for (let eta = -1.5; eta <= 3.5; eta += 0.02) {
+        let m = -Infinity;
+        for (const b of betas) { const ll = this.logLik(entsch, eta, b); if (ll > m) m = ll; }
+        kurve.push([eta, m]);
+        if (m > best) { best = m; bestEta = eta; }
+      }
+      // Unschaerfe: Bereich innerhalb von 0,5 Log-Likelihood-Einheiten um das Maximum.
+      const drin = kurve.filter(k => k[1] >= best - 0.5).map(k => k[0]);
+      const fehler = drin.length ? (Math.max(...drin) - Math.min(...drin)) / 2 : NaN;
+      return { eta: bestEta, fehler };
+    },
+
+    // Zeitoptimal: additiv der hoehere Mittelwert der Betraege, multiplikativ der
+    // hoehere Mittelwert der Logarithmen. Erwartungswert-optimal: immer der Mittelwert
+    // der resultierenden Vermoegen. Wo beide auseinanderfallen, wird gezaehlt.
+    modellfrei(entsch) {
+      let n = 0, treffer = 0;
+      for (const p of entsch) {
+        const zeit = s => p.dynamik === 'mult'
+          ? (Math.log(p.werte[s[0]]) + Math.log(p.werte[s[1]])) / 2
+          : (p.werte[s[0]] + p.werte[s[1]]) / 2;
+        const ens = s => (this.ausgang(p, s[0]) + this.ausgang(p, s[1])) / 2;
+        const zL = zeit(p.links), zR = zeit(p.rechts), eL = ens(p.links), eR = ens(p.rechts);
+        if (Math.sign(zL - zR) !== Math.sign(eL - eR) && zL !== zR && eL !== eR) {
+          n++;
+          if ((zL > zR && p.gewaehlt === 'links') || (zR > zL && p.gewaehlt === 'rechts')) treffer++;
+        }
+      }
+      return { n, quote: n ? treffer / n : 0 };
+    },
+
+    auswerten() {
+      const echte = this.protokoll.filter(p => !p.nb);
+      const add = echte.filter(p => p.dynamik === 'add');
+      const mult = echte.filter(p => p.dynamik === 'mult');
+      const a = this.etaSchaetzen(add), m = this.etaSchaetzen(mult);
+      this.etaAdd = a.eta; this.etaMult = m.eta;
+      this.etaFehler = Math.max(a.fehler || 0, m.fehler || 0);
+      const qa = this.modellfrei(add), qm = this.modellfrei(mult);
+      this.quoteAdd = qa.quote; this.nDiskAdd = qa.n;
+      this.quoteMult = qm.quote; this.nDiskMult = qm.n;
+      const nb = this.protokoll.filter(p => p.nb);
+      this.nbGesamt = nb.length;
+      // Beide Wetten teilen sich das erste Bild; entschieden wird das zweite.
+      this.nbRichtig = nb.filter(p =>
+        (p.gewaehlt === 'links') === (p.werte[p.links[1]] > p.werte[p.rechts[1]])
+      ).length;
+      this.phase = 'auswertung';
+      nextTick(() => this.zeichnen());
+    },
+
+    zeichnen() {
+      const c = this.$refs.etaCanvas; if (!c) return;
+      const dpr = window.devicePixelRatio || 1;
+      c.width = c.clientWidth * dpr; c.height = 300 * dpr;
+      const g = c.getContext('2d'); g.scale(dpr, dpr);
+      const W = c.clientWidth, H = 300, pad = 38;
+      const xmin = -1, xmax = 2.5, ymin = -1, ymax = 2.5;
+      const X = v => pad + (v - xmin) / (xmax - xmin) * (W - pad - 12);
+      const Y = v => H - pad - (v - ymin) / (ymax - ymin) * (H - pad - 12);
+      g.clearRect(0, 0, W, H);
+      g.strokeStyle = '#e7e5e4'; g.lineWidth = 1;
+      for (let v = -1; v <= 2.5; v += 0.5) {
+        g.beginPath(); g.moveTo(X(v), Y(ymin)); g.lineTo(X(v), Y(ymax)); g.stroke();
+        g.beginPath(); g.moveTo(X(xmin), Y(v)); g.lineTo(X(xmax), Y(v)); g.stroke();
+      }
+      // Diagonale: dynamik-invariant
+      g.strokeStyle = '#a8a29e'; g.setLineDash([5, 4]); g.beginPath();
+      g.moveTo(X(xmin), Y(ymin)); g.lineTo(X(xmax), Y(ymax)); g.stroke(); g.setLineDash([]);
+      // zeitoptimale Linien
+      g.strokeStyle = '#1d4ed8'; g.beginPath(); g.moveTo(X(0), Y(ymin)); g.lineTo(X(0), Y(ymax)); g.stroke();
+      g.strokeStyle = '#be123c'; g.beginPath(); g.moveTo(X(xmin), Y(1)); g.lineTo(X(xmax), Y(1)); g.stroke();
+      // Gruppenwert der 18 Teilnehmer
+      g.fillStyle = '#a8a29e'; g.beginPath(); g.arc(X(0.1506), Y(1.1534), 5, 0, 7); g.fill();
+      // eigener Punkt
+      g.fillStyle = '#1c1917'; g.beginPath(); g.arc(X(this.etaAdd), Y(this.etaMult), 7, 0, 7); g.fill();
+      g.fillStyle = '#57534e'; g.font = '11px system-ui';
+      g.fillText('eta additiv', W / 2 - 24, H - 10);
+      g.save(); g.translate(11, H / 2 + 28); g.rotate(-Math.PI / 2); g.fillText('eta multiplikativ', 0, 0); g.restore();
+      g.fillText('0', X(0) - 3, H - pad + 14); g.fillText('1', X(1) - 3, H - pad + 14); g.fillText('2', X(2) - 3, H - pad + 14);
+      g.fillText('0', pad - 14, Y(0) + 4); g.fillText('1', pad - 14, Y(1) + 4); g.fillText('2', pad - 14, Y(2) + 4);
+    },
+
+    nochmal() { this.phase = 'intro'; }
+  }
 }).mount('#app');
 </script>
 </body>
