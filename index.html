@@ -226,16 +226,19 @@
     <div class="rounded-lg border border-stone-300 bg-white p-5 mb-6">
       <h3 class="font-semibold mb-2 text-sm">Ohne jedes Modell</h3>
       <p class="text-sm text-stone-600 leading-relaxed mb-2">
-        In den Durchgaengen, in denen der Erwartungswert und die Wachstumsrate ueber die
-        Zeit auf <em>verschiedene</em> Wetten zeigen, hast du die zeitoptimale gewaehlt:
+        Ein <em>diskrepanter</em> Durchgang ist einer, in dem ein Akteur mit linearem
+        Nutzen anders waehlen wuerde als einer mit logarithmischem. Wie oft hast du dort
+        die logarithmische Wette genommen?
       </p>
       <p class="num">
         additiv <strong>{{ prozent(quoteAdd) }}</strong> von {{ nDiskAdd }} &middot;
         multiplikativ <strong>{{ prozent(quoteMult) }}</strong> von {{ nDiskMult }}
       </p>
       <p class="text-xs text-stone-500 mt-2">
-        Das ist die modellfreie Auswertung des Papiers (Abb. 2). Dort stieg dieser Anteil
-        vom additiven zum multiplikativen Tag deutlich an.
+        Das ist Abbildung 2 des Papiers. Dort: <span class="num">0,49</span> additiv,
+        <span class="num">0,72</span> multiplikativ — eine Verschiebung von
+        <span class="num">0,225</span> innerhalb derselben Person. 25 der 312 Durchgaenge
+        waren diskrepant.
       </p>
     </div>
 
@@ -469,9 +472,9 @@ createApp({
     // aendert sich mit eta um Zehnerpotenzen, ein festes beta waere hier sinnlos).
     etaSchaetzen(entsch) {
       if (!entsch.length) return { eta: 0, fehler: NaN };
-      const betas = []; for (let e = -8; e <= 4; e += 0.25) betas.push(Math.pow(10, e));
+      const betas = []; for (let e = -8; e <= 4; e += 0.5) betas.push(Math.pow(10, e));
       let best = -Infinity, bestEta = 0; const kurve = [];
-      for (let eta = -1.5; eta <= 3.5; eta += 0.02) {
+      for (let eta = -1.5; eta <= 3.5; eta += 0.05) {
         let m = -Infinity;
         for (const b of betas) { const ll = this.logLik(entsch, eta, b); if (ll > m) m = ll; }
         kurve.push([eta, m]);
@@ -483,21 +486,19 @@ createApp({
       return { eta: bestEta, fehler };
     },
 
-    // Zeitoptimal: additiv der hoehere Mittelwert der Betraege, multiplikativ der
-    // hoehere Mittelwert der Logarithmen. Erwartungswert-optimal: immer der Mittelwert
-    // der resultierenden Vermoegen. Wo beide auseinanderfallen, wird gezaehlt.
+    // Definition des Papiers: ein Durchgang ist "diskrepant", wenn ein Akteur mit
+    // linearem Nutzen (eta = 0) und einer mit logarithmischem (eta = 1) verschieden
+    // waehlen wuerden. Gezaehlt wird der Anteil, in dem der Logarithmus gewaehlt wurde.
     modellfrei(entsch) {
       let n = 0, treffer = 0;
       for (const p of entsch) {
-        const zeit = s => p.dynamik === 'mult'
-          ? (Math.log(p.werte[s[0]]) + Math.log(p.werte[s[1]])) / 2
-          : (p.werte[s[0]] + p.werte[s[1]]) / 2;
-        const ens = s => (this.ausgang(p, s[0]) + this.ausgang(p, s[1])) / 2;
-        const zL = zeit(p.links), zR = zeit(p.rechts), eL = ens(p.links), eR = ens(p.rechts);
-        if (Math.sign(zL - zR) !== Math.sign(eL - eR) && zL !== zR && eL !== eR) {
-          n++;
-          if ((zL > zR && p.gewaehlt === 'links') || (zR > zL && p.gewaehlt === 'rechts')) treffer++;
-        }
+        const lin = s => (this.ausgang(p, s[0]) + this.ausgang(p, s[1])) / 2;
+        const log = s => (Math.log(this.ausgang(p, s[0])) + Math.log(this.ausgang(p, s[1]))) / 2;
+        const lL = lin(p.links), lR = lin(p.rechts), gL = log(p.links), gR = log(p.rechts);
+        if (lL === lR || gL === gR) continue;
+        if (Math.sign(lL - lR) === Math.sign(gL - gR)) continue;
+        n++;
+        if ((gL > gR && p.gewaehlt === 'links') || (gR > gL && p.gewaehlt === 'rechts')) treffer++;
       }
       return { n, quote: n ? treffer / n : 0 };
     },
