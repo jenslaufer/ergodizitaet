@@ -23,6 +23,7 @@ function assertClean(text, where) {
 
 async function playOneDay(page) {
   await page.getByRole('button', { name: 'Run through the rest' }).click();
+  await page.getByRole('button', { name: 'Start choosing' }).click();
   for (;;) {
     const gambles = page.getByRole('button', { name: /^Gamble / });
     if (await gambles.count() === 0) break;

@@ -42,3 +42,10 @@ All simulation runs in the browser; nothing is sent anywhere, nothing is stored.
 
 Run locally: `python3 -m http.server` in the repo directory, then
 <http://localhost:8000>.
+
+## Tests
+
+```
+npm test        # unit: the stimulus generator in src/stimuli.js
+npm run test:e2e  # end to end: the page as it is shipped
+```
