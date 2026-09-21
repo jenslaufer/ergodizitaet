@@ -23,4 +23,4 @@ Lokal ansehen: `python3 -m http.server` im Repo-Verzeichnis, dann
 
 ## Live
 
-<https://jenslaufer.github.io/ergodizitaet/>
+<https://jenslaufer.com/ergodizitaet/>
