@@ -25,7 +25,7 @@
       Meder, Rabe, Morville, Madsen, Koudahl, Dolan, Siebner, Hulme, Peters:
       <em>Ergodicity-breaking reveals time optimal decision making in humans</em>,
       PLOS Computational Biology 2021. 18 Menschen, zwei Tage, echtes Geld.
-      An einem Tag wurde ihr Vermoegen addiert, am anderen multipliziert.
+      An einem Tag wurde ihr Vermögen addiert, am anderen multipliziert.
       Die Frage: verschiebt sich die Risikoneigung mit der Dynamik?
     </p>
   </header>
@@ -35,15 +35,15 @@
     <div class="rounded-lg border border-stone-300 bg-white p-5 mb-6">
       <h2 class="font-semibold mb-3">Der Ablauf im Original</h2>
       <ol class="list-decimal ml-5 space-y-2 text-sm text-stone-700 leading-relaxed">
-        <li><strong>Startvermoegen 1.000 DKK</strong> an jedem der beiden Tage.</li>
+        <li><strong>Startvermögen 1.000 DKK</strong> an jedem der beiden Tage.</li>
         <li><strong>Passive Phase.</strong> Neun Bildreize, jeder mit einer festen Wirkung
-        auf das Vermoegen. Jeder Reiz wird 37-mal gezeigt, 333 Durchgaenge. Nichts zu
+        auf das Vermögen. Jeder Reiz wird 37-mal gezeigt, 333 Durchgänge. Nichts zu
         entscheiden — nur beobachten und lernen, welches Bild was tut.</li>
         <li><strong>Aktive Phase.</strong> 312 Entscheidungen zwischen zwei Wetten. Jede
         Wette besteht aus zwei der gelernten Bilder, jedes mit 50 % Wahrscheinlichkeit.
-        <strong>Die Ausgaenge bleiben verborgen.</strong></li>
-        <li><strong>Am Tagesende werden 10 der gewaehlten Wetten zufaellig ausgelost</strong>
-        und auf das Vermoegen angewendet. Das ist die Auszahlung.</li>
+        <strong>Die Ausgänge bleiben verborgen.</strong></li>
+        <li><strong>Am Tagesende werden 10 der gewählten Wetten zufällig ausgelost</strong>
+        und auf das Vermögen angewendet. Das ist die Auszahlung.</li>
         <li>Am zweiten Tag dasselbe, andere Bilder, andere Dynamik.</li>
       </ol>
     </div>
@@ -52,19 +52,19 @@
       <p class="text-sm text-stone-700 leading-relaxed">
         <strong>Die Teilnehmer erfuhren nie, dass sich die Tage unterscheiden.</strong>
         Gleiche Anleitung, gleicher Ablauf, gleicher Scanner. Nur die Mathematik hinter
-        den Bildern war eine andere — und die Reihenfolge der beiden Tage war ueber die
+        den Bildern war eine andere — und die Reihenfolge der beiden Tage war über die
         Gruppe ausbalanciert.
       </p>
     </div>
 
     <h2 class="font-semibold mb-3">Die neun Reize</h2>
     <p class="text-sm text-stone-600 mb-4">
-      Additiv: Betraege von <span class="num">&minus;428</span> bis
-      <span class="num">+428</span> DKK, gleichmaessig auf einer linearen Skala.
+      Additiv: Beträge von <span class="num">&minus;428</span> bis
+      <span class="num">+428</span> DKK, gleichmäßig auf einer linearen Skala.
       Multiplikativ: Wachstumsfaktoren von <span class="num">0,447</span> (gut halbieren)
-      bis <span class="num">2,239</span> (gut verdoppeln), gleichmaessig auf einer
+      bis <span class="num">2,239</span> (gut verdoppeln), gleichmäßig auf einer
       <em>logarithmischen</em> Skala. Beide Reihen aus den Rohdaten des Papiers
-      nachgerechnet, nicht geschaetzt.
+      nachgerechnet, nicht geschätzt.
     </p>
     <div class="grid grid-cols-3 gap-2 mb-6 text-xs">
       <div v-for="(f, i) in FAKTOREN" :key="i" class="rounded border border-stone-300 bg-white p-2 text-center">
@@ -86,7 +86,7 @@
     </button>
     <p class="text-xs text-stone-500 mt-3">
       Das Original hatte 312 Entscheidungen pro Tag. Je weniger du spielst, desto
-      unschaerfer faellt deine eigene Schaetzung am Ende aus — die Seite sagt dir, wie
+      unschärfer fällt deine eigene Schätzung am Ende aus — die Seite sagt dir, wie
       unscharf.
     </p>
   </section>
@@ -98,8 +98,8 @@
     </p>
     <h2 class="text-xl font-semibold mb-4">Schau zu, was die Bilder mit deinem Geld machen.</h2>
     <p class="text-stone-600 text-sm mb-6 leading-relaxed">
-      Nichts zu entscheiden. Merk dir, welches Bild dein Vermoegen wie stark bewegt —
-      in der naechsten Phase waehlst du zwischen ihnen, und dort siehst du keine Zahlen mehr.
+      Nichts zu entscheiden. Merk dir, welches Bild dein Vermögen wie stark bewegt —
+      in der nächsten Phase wählst du zwischen ihnen, und dort siehst du keine Zahlen mehr.
     </p>
 
     <div class="rounded-lg border border-stone-300 bg-white p-6 mb-4 text-center">
@@ -115,15 +115,15 @@
 
     <div class="flex flex-wrap gap-3">
       <button @click="passivSchritt" class="rounded-md bg-stone-900 px-5 py-2.5 text-sm text-white hover:bg-stone-700">
-        Naechster Reiz
+        Nächster Reiz
       </button>
       <button @click="passivDurchlaufen" class="rounded-md border border-stone-300 bg-white px-4 py-2.5 text-sm hover:border-stone-500">
         Rest im Schnelldurchlauf
       </button>
     </div>
     <p class="text-xs text-stone-500 mt-3">
-      Im Original musste hier binnen einer Sekunde eine Taste gedrueckt werden, damit der
-      Scanner einen sauberen Zeitpunkt hat. Hier draengt nichts.
+      Im Original musste hier binnen einer Sekunde eine Taste gedrückt werden, damit der
+      Scanner einen sauberen Zeitpunkt hat. Hier drängt nichts.
     </p>
   </section>
 
@@ -134,8 +134,8 @@
     </p>
     <h2 class="text-xl font-semibold mb-2">Welche Wette nimmst du?</h2>
     <p class="text-stone-600 text-sm mb-6">
-      Jede Wette: eins der beiden Bilder trifft ein, je 50 %. Was herauskam, erfaehrst du
-      nicht. Dein Vermoegen steht bei
+      Jede Wette: eins der beiden Bilder trifft ein, je 50 %. Was herauskam, erfährst du
+      nicht. Dein Vermögen steht bei
       <span class="num font-medium">{{ komma(vermoegen, 2) }} kr</span>.
     </p>
 
@@ -181,13 +181,13 @@
     <h2 class="text-xl font-semibold mb-4">Deine Risikoaversion</h2>
 
     <p class="text-stone-600 text-sm mb-5 leading-relaxed">
-      Aus deinen Entscheidungen wird dasselbe Modell geschaetzt wie im Papier:
+      Aus deinen Entscheidungen wird dasselbe Modell geschätzt wie im Papier:
       isoelastischer Nutzen mit einem Parameter <em>eta</em>.
-      <span class="num">eta = 0</span> heisst risikoneutral (linearer Nutzen),
-      <span class="num">eta = 1</span> heisst logarithmischer Nutzen.
-      Die Vorhersage der Ergodizitaets-Theorie: <strong>eta = 0 am additiven Tag,
+      <span class="num">eta = 0</span> heißt risikoneutral (linearer Nutzen),
+      <span class="num">eta = 1</span> heißt logarithmischer Nutzen.
+      Die Vorhersage der Ergodizitäts-Theorie: <strong>eta = 0 am additiven Tag,
       eta = 1 am multiplikativen</strong> — denn das maximiert jeweils die Wachstumsrate
-      ueber die Zeit, nicht den Erwartungswert.
+      über die Zeit, nicht den Erwartungswert.
     </p>
 
     <div class="grid grid-cols-2 gap-3 mb-6">
@@ -208,7 +208,7 @@
       <p class="text-xs text-stone-500 mt-3 leading-relaxed">
         Waagerecht dein eta am additiven Tag, senkrecht am multiplikativen. Das Kreuz ist
         der zeitoptimale Punkt (0&nbsp;|&nbsp;1). Die Diagonale ist, wo du laegest, wenn
-        die Dynamik dir egal waere. Der graue Punkt ist der Gruppenwert der 18 Teilnehmer
+        die Dynamik dir egal wäre. Der graue Punkt ist der Gruppenwert der 18 Teilnehmer
         (0,15&nbsp;|&nbsp;1,15).
       </p>
     </div>
@@ -216,9 +216,9 @@
     <div class="rounded-lg border-l-4 border-stone-900 bg-white p-5 mb-6">
       <p class="mb-2"><strong>Dein Verschiebungsmass: {{ komma(etaMult - etaAdd, 2) }}</strong></p>
       <p class="text-sm text-stone-600 leading-relaxed">
-        Im Papier betraegt diese Verschiebung im Mittel <span class="num">1,00</span>
+        Im Papier beträgt diese Verschiebung im Mittel <span class="num">1,00</span>
         (SD 0,35, 95-%-Intervall 0,83–1,17) — praktisch genau der Wert, den die Theorie
-        vorhersagt. Nicht ein einziger der 18 Teilnehmer lag naeher an der Diagonale als
+        vorhersagt. Nicht ein einziger der 18 Teilnehmer lag näher an der Diagonale als
         am zeitoptimalen Punkt.
       </p>
     </div>
@@ -227,7 +227,7 @@
       <h3 class="font-semibold mb-2 text-sm">Ohne jedes Modell</h3>
       <p class="text-sm text-stone-600 leading-relaxed mb-2">
         Ein <em>diskrepanter</em> Durchgang ist einer, in dem ein Akteur mit linearem
-        Nutzen anders waehlen wuerde als einer mit logarithmischem. Wie oft hast du dort
+        Nutzen anders wählen würde als einer mit logarithmischem. Wie oft hast du dort
         die logarithmische Wette genommen?
       </p>
       <p class="num">
@@ -237,7 +237,7 @@
       <p class="text-xs text-stone-500 mt-2">
         Das ist Abbildung 2 des Papiers. Dort: <span class="num">0,49</span> additiv,
         <span class="num">0,72</span> multiplikativ — eine Verschiebung von
-        <span class="num">0,225</span> innerhalb derselben Person. 25 der 312 Durchgaenge
+        <span class="num">0,225</span> innerhalb derselben Person. 25 der 312 Durchgänge
         waren diskrepant.
       </p>
     </div>
@@ -246,26 +246,26 @@
       <h3 class="font-semibold mb-2 text-sm">Was an diesem Nachbau nicht 1:1 ist</h3>
       <ul class="list-disc ml-5 space-y-1 text-sm text-stone-700 leading-relaxed">
         <li><strong>{{ nAktiv }} Entscheidungen statt 312</strong> pro Tag, und
-        {{ passivSeq.length }} statt 333 passive Durchgaenge. Deshalb steht dein eta auf
+        {{ passivSeq.length }} statt 333 passive Durchgänge. Deshalb steht dein eta auf
         duennem Grund: <span class="num">&plusmn;{{ komma(etaFehler, 2) }}</span>
         (Kruemmung der Likelihood).</li>
         <li><strong>Kein echtes Geld.</strong> Im Original ging es um bis zu 4.000 DKK
-        Auszahlung, zusaetzlich zu 1.020 DKK Aufwandsentschaedigung.</li>
+        Auszahlung, zusätzlich zu 1.020 DKK Aufwandsentschaedigung.</li>
         <li><strong>Kein Kernspintomograf, keine zwei getrennten Tage.</strong> Die
         Teilnehmer lagen je drei Stunden im Scanner, an zwei verschiedenen Terminen.</li>
         <li><strong>Andere Bilder.</strong> Das Original nutzte 18 feste Fraktalbilder,
         hier sind es erzeugte Muster.</li>
-        <li><strong>Maximum-Likelihood statt hierarchischer Bayes-Schaetzung.</strong> Das
-        Papier schaetzt eta und beta gemeinsam ueber alle Teilnehmer; hier wird dein eta
-        einzeln und ohne Prior geschaetzt.</li>
+        <li><strong>Maximum-Likelihood statt hierarchischer Bayes-Schätzung.</strong> Das
+        Papier schätzt eta und beta gemeinsam über alle Teilnehmer; hier wird dein eta
+        einzeln und ohne Prior geschätzt.</li>
         <li>Die Wettpaare stammen aus demselben eingeschraenkten Raum wie im Original
         (beide Wetten gemischt, alle vier Bilder verschieden, dazu
-        {{ nNoBrainer }} No-Brainer-Durchgaenge zur Kontrolle) — nur nicht alle 144.</li>
+        {{ nNoBrainer }} No-Brainer-Durchgänge zur Kontrolle) — nur nicht alle 144.</li>
       </ul>
       <p class="text-sm text-stone-700 mt-3">
         No-Brainer richtig: <span class="num font-medium">{{ nbRichtig }}/{{ nbGesamt }}</span>.
         <span v-if="nbGesamt && nbRichtig / nbGesamt <= 0.5">Unter 50 % — im Original war das
-        der Ausschlussgrund fuer Teilnehmer 5.</span>
+        der Ausschlussgrund für Teilnehmer 5.</span>
       </p>
     </div>
 
@@ -282,7 +282,7 @@
       <a class="underline" href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1009217">Papier</a> &middot;
       <a class="underline" href="https://github.com/ollie-hulme/ergodicity-breaking-choice-experiment">Daten und Code</a>.
     </p>
-    <p>Die neun Wachstumsraten sind aus den Rohdaten des Repositoriums gelesen, nicht aus dem Fliesstext geschaetzt.</p>
+    <p>Die neun Wachstumsraten sind aus den Rohdaten des Repositoriums gelesen, nicht aus dem Fließtext geschätzt.</p>
   </footer>
 </div>
 
